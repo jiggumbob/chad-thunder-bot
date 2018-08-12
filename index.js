@@ -6,4 +6,4 @@ client.on('ready', () => {
   console.log('Ready!');
 });
 
-client.login(config.token);
+client.login(config.discordToken);
