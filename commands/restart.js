@@ -1,3 +1,5 @@
+import index.js as index;
+
 const {prefix, discordToken} = require('./config.json');
 
 module.exports = {
@@ -12,6 +14,6 @@ module.exports = {
 function resetBot(channel) {
     // send resetting message
     channel.send('Resetting...')
-    .then(msg => client.destroy())
-    .then(() => client.login(discordToken);
+    .then(msg => index.client.destroy())
+    .then(() => index.client.login(discordToken);
 }
