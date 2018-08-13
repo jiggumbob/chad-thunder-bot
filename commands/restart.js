@@ -1,4 +1,4 @@
-import index.js as index;
+import {client} from "/index.js"
 
 const {prefix, discordToken} = require('./config.json');
 
