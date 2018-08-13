@@ -16,5 +16,5 @@ function resetBot(channel) {
     // send resetting message
     channel.send('Resetting...')
     .then(msg => client.destroy())
-    .then(() => client.login(discordToken);
+    .then(() => client.login(discordToken));
 }
