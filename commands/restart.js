@@ -14,6 +14,6 @@ module.exports = {
 function resetBot(channel) {
     // send resetting message
     channel.send('Resetting...')
-    .then(msg => index.client.destroy())
-    .then(() => index.client.login(discordToken);
+    .then(msg => client.destroy())
+    .then(() => client.login(discordToken);
 }
