@@ -1,3 +1,5 @@
+const {prefix, discordToken} = require('./config.json');
+
 module.exports = {
     name: 'restart',
     description: 'Restarts the bot.',
@@ -11,5 +13,5 @@ function resetBot(channel) {
     // send resetting message
     channel.send('Resetting...')
     .then(msg => client.destroy())
-    .then(() => client.login(config.discordToken);
+    .then(() => client.login(discordToken);
 }
