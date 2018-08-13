@@ -1,4 +1,4 @@
-const index = require('./index.js')
+const index = require('./index')
 const client = index.client
 
 const {prefix, discordToken} = require('./config.json');
