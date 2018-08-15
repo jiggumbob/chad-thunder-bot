@@ -4,11 +4,16 @@
   "description": "A multi-purpose work in progress Discord bot.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": "8.10.0"
   },
   "author": "Jude Markabawi, Stanley Wang, Aiden Lewis",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^11.4.1"
+    "discord.js": "^11.4.2",
+    "express": "^4.16.3"
   }
 }
