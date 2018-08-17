@@ -19,7 +19,7 @@ client.on('ready', () => {
   console.log('Ready!');
 });
 
-const prefix = 'b!';
+const prefix = 'c!';
 client.on("message", message => {
   if (message.author.bot) return;
   if(message.content.indexOf(prefix) !== 0) return;
