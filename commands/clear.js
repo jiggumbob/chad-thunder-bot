@@ -1,5 +1,4 @@
 exports.run = (client, message, args) => {
-  
   // Check if the user has enough permissions
   if (!message.channel.permissionsFor(message.member).has("MANAGE_MESSAGES")) {
     message.channel.sendMessage("Sorry, you don't have the permission to execute the command \""+message.content+"\"");
