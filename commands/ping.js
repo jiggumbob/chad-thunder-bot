@@ -19,7 +19,7 @@ exports.run = async (client, message, args) => {
       
       fields : [
         {
-          name:'Ping',
+          name:"Ping",
           
           value: latency + " ms",
         } 
