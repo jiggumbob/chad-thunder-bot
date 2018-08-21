@@ -18,6 +18,8 @@
     "cheerio": "^0.22.0",
     "querystring": "^0.2.0",
     "snoowrap": "^1.15.2",
-    "node-fetch": "^2.2.0"
+    "googleapis": "^32.0.0",
+    "enmap": "^3.1.1",
+    "node-ddg-api": "^0.1.4"
   }
 }

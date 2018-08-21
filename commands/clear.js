@@ -14,4 +14,16 @@ exports.run = async (client, message, args) => {
   await message.channel.bulkDelete(+args[0] + 1); // one extra to delete the user's message
 }
 
+exports.conf = {
+  enabled: true, // not used yet
+  guildOnly: false, // not used yet
+  aliases: [],
+  permLevel: 0 // Permissions Required, higher is more power
+};
+
+exports.help = {
+  name : "clear",
+  description: "Clear messages",
+  usage: "clear <number>"
+};
 

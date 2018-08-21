@@ -1,5 +1,6 @@
 exports.run = async (client, message, args) => {
   const snoowrap = require("snoowrap");
+  const redditutil = require("../util/reddit/reddit-util.js");
   
   const Reddit = new snoowrap({
       userAgent: "Discord: chad-thunder-bot",
@@ -8,14 +9,29 @@ exports.run = async (client, message, args) => {
       refreshToken: process.env.REDDIT_REFRESH_TOKEN
     });
   
-  let testPosts = await Reddit.getSubreddit("nosleep").getHot();
-  let testPost = testPosts[3];
+  let commands = message.content.split(" ");
+  let subcommand = commands[1];
+  let argument = commands[2];
   
-  // var keys = Object.keys(testPost);
-  // for(let key of keys) {
-  //   message.channel.send(key);
-  // }
-  
-  message.channel.send(testPost.selftext.slice(0, 1900));
+  switch(subcommand) {
+    case "r":
+      await redditutil.processRandomCommand(argument, message); // message is the context passed
+      break;
+    default:
+      message.channel.send("Unrecognized reddit subcommand.");
+  }
 }
+
+exports.conf = {
+  enabled: true, // not used yet
+  guildOnly: false, // not used yet
+  aliases: [],
+  permLevel: 0 // Permissions Required, higher is more power
+};
+
+exports.help = {
+  name : "reddit",
+  description: "Reddit stuff",
+  usage: "reddit <argument>"
+};
 

@@ -1,8 +1,10 @@
 dependencies:
   cheerio: 0.22.0
   discord.js: 11.4.2
+  enmap: 3.1.1
   express: 4.16.3
-  node-fetch: 2.2.0
+  googleapis: 32.0.0
+  node-ddg-api: 0.1.4
   querystring: 0.2.0
   snoowrap: 1.15.2
 packages:
@@ -56,6 +58,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-ReZxvNHIOv88FlT7rxcXIIC0fPt4KZqZbOlivyWtXLt8ESx84zd3kMC6iK5jVeS2qt+g7ftS7ye4fi06X5rtRQ==
+  /axios/0.18.0:
+    dependencies:
+      follow-redirects: 1.5.5
+      is-buffer: 1.1.6
+    dev: false
+    resolution:
+      integrity: sha1-MtU+SFHv3AoRmTts0AB4nXDAUQI=
   /bcrypt-pbkdf/1.0.2:
     dependencies:
       tweetnacl: 0.14.5
@@ -88,6 +97,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-aN/1++YMUes3cl6p4+0xDcwed24=
+  /buffer-equal-constant-time/1.0.1:
+    dev: false
+    resolution:
+      integrity: sha1-+OcRMvf/5uAaXJaXpMbz5I1cyBk=
   /bytes/3.0.0:
     dev: false
     engines:
@@ -189,6 +202,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==
+  /debug/3.1.0:
+    dependencies:
+      ms: 2.0.0
+    dev: false
+    resolution:
+      integrity: sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==
   /delayed-stream/1.0.0:
     dev: false
     engines:
@@ -274,6 +293,12 @@ packages:
     optional: true
     resolution:
       integrity: sha1-OoOpBOVDUyh4dMVkt1SThoSamMk=
+  /ecdsa-sig-formatter/1.0.10:
+    dependencies:
+      safe-buffer: 5.1.2
+    dev: false
+    resolution:
+      integrity: sha1-HFlQAPBKiJffuFAAiSoPTDOvhsM=
   /ee-first/1.1.1:
     dev: false
     resolution:
@@ -284,6 +309,12 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
+  /enmap/3.1.1:
+    dependencies:
+      lodash: 4.17.10
+    dev: false
+    resolution:
+      integrity: sha512-m5U3toCpPMnB9JvD4yM0OmLo47KjrkZAtG6j87V/A8V6tOMO+1nJvn6HZK8WFihNG6N6kl2OuBfKnsLX6x1GOw==
   /entities/1.1.1:
     dev: false
     resolution:
@@ -373,6 +404,14 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha512-Y1GUDo39ez4aHAw7MysnUD5JzYX+WaIj8I57kO3aEPT1fFRL4sr7mjei97FgnwhAyyzRYmQZaTHb2+9uZ1dPtg==
+  /follow-redirects/1.5.5:
+    dependencies:
+      debug: 3.1.0
+    dev: false
+    engines:
+      node: '>=4.0'
+    resolution:
+      integrity: sha512-GHjtHDlY/ehslqv0Gr5N0PUJppgg/q0rOBvX0na1s7y1A3LWxPqCYU76s3Z1bM4+UZB4QF0usaXLT5wFpof5PA==
   /forever-agent/0.6.1:
     dev: false
     resolution:
@@ -399,12 +438,66 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=
+  /gcp-metadata/0.6.3:
+    dependencies:
+      axios: 0.18.0
+      extend: 3.0.2
+      retry-axios: /retry-axios/0.3.2/axios@0.18.0
+    dev: false
+    engines:
+      node: '>=4'
+    resolution:
+      integrity: sha512-MSmczZctbz91AxCvqp9GHBoZOSbJKAICV7Ow/AIWSJZRrRchUd5NL1b2P4OfP+4m490BEUPhhARfpHdqCxuCvg==
   /getpass/0.1.7:
     dependencies:
       assert-plus: 1.0.0
     dev: false
     resolution:
       integrity: sha1-Xv+OPmhNVprkyysSgmBOi6YhSfo=
+  /google-auth-library/1.6.1:
+    dependencies:
+      axios: 0.18.0
+      gcp-metadata: 0.6.3
+      gtoken: 2.3.0
+      jws: 3.1.5
+      lodash.isstring: 4.0.1
+      lru-cache: 4.1.3
+      retry-axios: /retry-axios/0.3.2/axios@0.18.0
+    dev: false
+    engines:
+      node: '>=4'
+    resolution:
+      integrity: sha512-jYiWC8NA9n9OtQM7ANn0Tk464do9yhKEtaJ72pKcaBiEwn4LwcGYIYOfwtfsSm3aur/ed3tlSxbmg24IAT6gAg==
+  /google-p12-pem/1.0.2:
+    dependencies:
+      node-forge: 0.7.6
+      pify: 3.0.0
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-+EuKr4CLlGsnXx4XIJIVkcKYrsa2xkAmCvxRhX2HsazJzUBAJ35wARGeApHUn4nNfPD03Vl057FskNr20VaCyg==
+  /googleapis/32.0.0:
+    dependencies:
+      google-auth-library: 1.6.1
+      pify: 3.0.0
+      qs: 6.5.2
+      url-template: 2.0.8
+      uuid: 3.3.2
+    dev: false
+    engines:
+      node: '>=6.0'
+    resolution:
+      integrity: sha512-UUPvQnztLkpkAt8cs2Zw/uVqCGbl9FuJbhqdvWIHr8RX7zrdemPQWkIrW7clyjhSZceHlnMya4U3tuQ4BXSxIQ==
+  /gtoken/2.3.0:
+    dependencies:
+      axios: 0.18.0
+      google-p12-pem: 1.0.2
+      jws: 3.1.5
+      mime: 2.3.1
+      pify: 3.0.0
+    dev: false
+    resolution:
+      integrity: sha512-Jc9/8mV630cZE9FC5tIlJCZNdUjwunvlwOtCz6IDlaiB4Sz68ki29a1+q97sWTnTYroiuF9B135rod9zrQdHLw==
   /har-schema/2.0.0:
     dev: false
     engines:
@@ -484,6 +577,10 @@ packages:
       node: '>= 0.10'
     resolution:
       integrity: sha1-6qM9bd16zo9/b+DJygRA5wZzix4=
+  /is-buffer/1.1.6:
+    dev: false
+    resolution:
+      integrity: sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==
   /is-typedarray/1.0.0:
     dev: false
     resolution:
@@ -524,6 +621,21 @@ packages:
       '0': node >=0.6.0
     resolution:
       integrity: sha1-MT5mvB5cwG5Di8G3SZwuXFastqI=
+  /jwa/1.1.6:
+    dependencies:
+      buffer-equal-constant-time: 1.0.1
+      ecdsa-sig-formatter: 1.0.10
+      safe-buffer: 5.1.2
+    dev: false
+    resolution:
+      integrity: sha512-tBO/cf++BUsJkYql/kBbJroKOgHWEigTKBAjjBEmrMGYd1QMBC74Hr4Wo2zCZw6ZrVhlJPvoMrkcOnlWR/DJfw==
+  /jws/3.1.5:
+    dependencies:
+      jwa: 1.1.6
+      safe-buffer: 5.1.2
+    dev: false
+    resolution:
+      integrity: sha512-GsCSexFADNQUr8T5HPJvayTjvPIfoyJPtLQBwn5a4WZQchcrPMPMAWcC1AzJVRDKyD6ZPROPAxgv6rfHViO4uQ==
   /lodash.assignin/4.2.0:
     dev: false
     resolution:
@@ -548,6 +660,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-Gmo16s5AEoDH8G3d7DUWWrJ+PlM=
+  /lodash.isstring/4.0.1:
+    dev: false
+    resolution:
+      integrity: sha1-1SfftUVuynzJu5XV2ur4i6VKVFE=
   /lodash.map/4.6.0:
     dev: false
     resolution:
@@ -580,6 +696,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
+  /lru-cache/4.1.3:
+    dependencies:
+      pseudomap: 1.0.2
+      yallist: 2.1.2
+    dev: false
+    resolution:
+      integrity: sha512-fFEhvcgzuIoJVUF8fYr5KR0YqxD238zgObTps31YdADwPPAp82a4M8TrckkWyx7ekNlf9aBcVn81cFwwXngrJA==
   /media-typer/0.3.0:
     dev: false
     engines:
@@ -615,6 +738,17 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-KI1+qOZu5DcW6wayYHSzR/tXKCDC5Om4s1z2QJjDULzLcmf3DvzS7oluY4HCTrc+9FiKmWUgeNLg7W3uIQvxtQ==
+  /mime/2.3.1:
+    dev: false
+    engines:
+      node: '>=4.0.0'
+    hasBin: true
+    resolution:
+      integrity: sha512-OEUllcVoydBHGN1z84yfQDimn58pZNNNXgZlHXSboxMlFvgI6MXSWpWKpFRra7H1HxpVhHTkrghfRW49k6yjeg==
+  /minimist/0.0.10:
+    dev: false
+    resolution:
+      integrity: sha1-3j+YVD2/lggr5IrRoMfNqDYwHc8=
   /ms/2.0.0:
     dev: false
     resolution:
@@ -625,12 +759,17 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha1-KzJxhOiZIQEXeyhWP7XnECrNDKk=
-  /node-fetch/2.2.0:
+  /node-ddg-api/0.1.4:
+    dependencies:
+      optimist: 0.6.1
     dev: false
-    engines:
-      node: 4.x || >=6.0.0
+    hasBin: true
     resolution:
-      integrity: sha512-OayFWziIxiHY8bCUyLX6sTpDH8Jsbp4FfYd1j1f7vZyfgkcOnAyM4oQR16f8a0s7Gl/viMGRey8eScYk4V4EZA==
+      integrity: sha1-9lQqS93htWf+QoL8kzKvUeqKjos=
+  /node-forge/0.7.6:
+    dev: false
+    resolution:
+      integrity: sha512-sol30LUpz1jQFBjOKwbjxijiE3b6pjd74YwfD0fJOKPjF+fONKb2Yg8rYgS6+bK6VDl+/wfr4IYpC7jDzLUIfw==
   /nth-check/1.0.1:
     dependencies:
       boolbase: 1.0.0
@@ -649,6 +788,13 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-IPEzZIGwg811M3mSoWlxqi2QaUc=
+  /optimist/0.6.1:
+    dependencies:
+      minimist: 0.0.10
+      wordwrap: 0.0.3
+    dev: false
+    resolution:
+      integrity: sha1-2j6nRob6IaGaERwybpDrFaAZZoY=
   /options/0.0.6:
     dev: false
     engines:
@@ -669,6 +815,12 @@ packages:
     dev: false
     resolution:
       integrity: sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
+  /pify/3.0.0:
+    dev: false
+    engines:
+      node: '>=4'
+    resolution:
+      integrity: sha1-5aSs0sEB/fPZpNB/DbxNtJ3SgXY=
   /prism-media/0.0.3:
     dev: false
     resolution:
@@ -692,6 +844,10 @@ packages:
       node: '>= 0.10'
     resolution:
       integrity: sha512-5erio2h9jp5CHGwcybmxmVqHmnCBZeewlfJ0pex+UW7Qny7OOZXTtH56TGNyBizkgiOwhJtMKrVzDTeKcySZwA==
+  /pseudomap/1.0.2:
+    dev: false
+    resolution:
+      integrity: sha1-8FKijacOYYkX7wqKw0wa5aaChrM=
   /psl/1.1.29:
     dev: false
     resolution:
@@ -784,6 +940,15 @@ packages:
       node: '>= 4'
     resolution:
       integrity: sha512-NAqBSrijGLZdM0WZNsInLJpkJokL72XYjUpnB0iwsRgxh7dB6COrHnTBNwN0E+lHDAJzu7kLAkDeY08z2/A0hg==
+  /retry-axios/0.3.2/axios@0.18.0:
+    dependencies:
+      axios: 0.18.0
+    dev: false
+    id: registry.npmjs.org/retry-axios/0.3.2
+    peerDependencies:
+      axios: '*'
+    resolution:
+      integrity: sha512-jp4YlI0qyDFfXiXGhkCOliBN1G7fRH03Nqy8YdShzGqbY5/9S2x/IR6C88ls2DFkbWuL3ASkP7QD3pVrNpPgwQ==
   /safe-buffer/5.1.1:
     dev: false
     resolution:
@@ -931,6 +1096,10 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-sr9O6FFKrmFltIF4KdIbLvSZBOw=
+  /url-template/2.0.8:
+    dev: false
+    resolution:
+      integrity: sha1-/FZaPMy/93MMd19WQflVV5FDnyE=
   /util-deprecate/1.0.2:
     dev: false
     resolution:
@@ -962,6 +1131,12 @@ packages:
       '0': node >=0.6.0
     resolution:
       integrity: sha1-OhBcoXBTr1XW4nDB+CiGguGNpAA=
+  /wordwrap/0.0.3:
+    dev: false
+    engines:
+      node: '>=0.4.0'
+    resolution:
+      integrity: sha1-o9XabNXAvAAI03I0u68b7WMFkQc=
   /ws/1.1.5:
     dependencies:
       options: 0.0.6
@@ -976,13 +1151,19 @@ packages:
     dev: false
     resolution:
       integrity: sha512-ZGh/8kF9rrRNffkLFV4AzhvooEclrOH0xaugmqGsIfFgOE/pIz4fMc4Ef+5HSQqTEug2S9JZIWDR47duDSLfaA==
+  /yallist/2.1.2:
+    dev: false
+    resolution:
+      integrity: sha1-HBH5IY8HYImkfdUS+TxmmaaoHVI=
 registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 8
 shrinkwrapVersion: 3
 specifiers:
   cheerio: ^0.22.0
   discord.js: ^11.4.2
+  enmap: ^3.1.1
   express: ^4.16.3
-  node-fetch: ^2.2.0
+  googleapis: ^32.0.0
+  node-ddg-api: ^0.1.4
   querystring: ^0.2.0
   snoowrap: ^1.15.2

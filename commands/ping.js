@@ -26,6 +26,17 @@ exports.run = async (client, message, args) => {
       ]
     }
   });
-  
-  
 }
+
+exports.conf = {
+  enabled: true, // not used yet
+  guildOnly: false, // not used yet
+  aliases: [],
+  permLevel: 0 // Permissions Required, higher is more power
+};
+
+exports.help = {
+  name : "ping",
+  description: "Get ping",
+  usage: "ping"
+};

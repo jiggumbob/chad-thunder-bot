@@ -1,36 +1,42 @@
 exports.run = async (client, message, args) => {
-  const cheerio = require("cheerio"),
-        fetch = require("node-fetch"),
-        querystring = require("querystring");
+  const {google} = require('googleapis');
+  const customsearch = google.customsearch('v1');
 
   var cutArgs = message.content.substr(message.content.indexOf(" ") + 1);
   
-  let searchUrl = `https://www.google.com/search?q=${encodeURIComponent(cutArgs)}`;
-  message.channel.send(searchUrl);
+  var active;
+  if (message.channel.nsfw === false) {
+    active = "active";
+  } else {
+    active = "off";
+  }
   
-  const res = await fetch(searchUrl);
-  const json = await res.json();
-  message.channel.send(json);
+  const res =  await customsearch.cse.list({
+    cx: process.env.GOOGLEID,
+    q: cutArgs,
+    auth: process.env.GOOGLEKEY,
+    num: 1,
+    safe: active
+  });
   
-    
+  // console.log(res.data);
+  // console.log((JSON.parse(JSON.stringify(res.data.items))));
+  message.channel.send(JSON.parse(JSON.stringify(res.data.items['0'].link)));
+  //message.channel.send();
   
-//   // We will now use snekfetch to crawl Google.com. Snekfetch uses promises so we will
-//   // utilize that for our try/catch block.
-//   return snekfetch.get(searchUrl).then((result) => {
-//     // Cheerio lets us parse the HTML on our google result to grab the URL.
-//     let $ = cheerio.load(result.body.file);
-    
-//     // This is allowing us to grab the URL from within the instance of the page (HTML)
-//     let googleData = $('.r').first().find('a').first().attr('href');
-
-//     // Now that we have our data from Google, we can send it to the channel.
-//     googleData = querystring.parse(googleData.replace('/url?', ''));
-
-//     // If no results are found, we catch it and return 'No results are found!'
-//   }).catch((err) => {
-//     message.channel.send('No results found.');
-//   });        
+  // runSample(options).catch(console.error);
+  // console.log(Object.keys(runSample()));
 }
 
+exports.conf = {
+  enabled: true, // not used yet
+  guildOnly: false, // not used yet
+  aliases: ["g"],
+  permLevel: 0 // Permissions Required, higher is more power
+};
 
-
+exports.help = {
+  name : "google",
+  description: "Google search stuff",
+  usage: "google <argument>"
+};
