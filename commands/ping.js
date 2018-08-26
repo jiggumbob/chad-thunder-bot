@@ -12,12 +12,12 @@ exports.run = async (client, message, args) => {
         responseMessage = await message.channel.send("Pinging again...");
         latency = responseMessage.createdTimestamp - message.createdTimestamp;
     }
-    
+
     let embed = new Discord.RichEmbed();
     embed.setColor(0xffff00);
     embed.setTitle("Ping");
     embed.setDescription(latency + " ms");
-  
+
     await responseMessage.edit(embed);
 }
 
