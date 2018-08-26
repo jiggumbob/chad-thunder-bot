@@ -1,7 +1,6 @@
 exports.run = async (client, message, args) => {
     const snoowrap = require("snoowrap");
     const redditutil = require("../util/reddit/reddit-util.js");
-
     const Reddit = new snoowrap({
         userAgent: "Discord: chad-thunder-bot",
         clientId: process.env.REDDIT_CLIENT_ID,
@@ -15,7 +14,7 @@ exports.run = async (client, message, args) => {
 
     switch (subcommand) {
         case "r":
-            await redditutil.processRandomCommand(argument, message); // message is the context passed
+            await redditutil.processRandomCommand(argument, message);
             break;
         case "u":
             await redditutil.processUrlCommand(argument, message);
@@ -26,15 +25,15 @@ exports.run = async (client, message, args) => {
 }
 
 exports.conf = {
-    enabled: true, // not used yet
-    guildOnly: false, // not used yet
+    enabled: true,
+    guildOnly: false,
     aliases: [],
-    permLevel: 0 // Permissions Required, higher is more power
+    permLevel: 0
 };
 
 exports.help = {
     name: "reddit",
-    description: "For ``reddit r [subreddit]``, prints a random post from that subreddit.\n"
-                +"For ``reddit u [reddit post url]``, prints the post at that URL.",
+    description: "For ``reddit r [subreddit]``, prints a random post from that subreddit.\n" +
+        "For ``reddit u [reddit post url]``, prints the post at that URL.",
     usage: "reddit <r/u> <argument>"
 };

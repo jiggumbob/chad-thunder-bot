@@ -1,19 +1,20 @@
 exports.run = async (client, message, args) => {
+    // uses DuckDuckGo Instant Answer API to give wikipedia answer
     var DDG = require('node-ddg-api').DDG;
-
     var ddg = new DDG('chad-thunder-bot');
 
-    // Removes the prefix and command, leaving only the argument
+    // removes prefix and command, leaves argument
     var cutArgs = message.content.substr(message.content.indexOf(" ") + 1);
 
     await ddg.instantAnswer(cutArgs, {
         skip_disambig: '0'
     }, function(err, response) {
-        if (err) { //If no response is given
+        // if no response is given
+        if (err) {
             message.channel.send("``" + cutArgs + "`` is not a valid argument.");
         }
 
-        // Removes disambiguation from the url
+        // Removes disambiguation from the wikipedia url
         let result = response.AbstractURL;
         if (result.includes("_(disambiguation)")) {
             result = result.slice(0, result.indexOf("_(disambiguation)"));
@@ -23,10 +24,10 @@ exports.run = async (client, message, args) => {
 }
 
 exports.conf = {
-    enabled: true, // not used yet
-    guildOnly: false, // not used yet
+    enabled: true,
+    guildOnly: false,
     aliases: ["wiki", "w"],
-    permLevel: 0 // Permissions Required, higher is more power
+    permLevel: 0
 };
 
 exports.help = {
