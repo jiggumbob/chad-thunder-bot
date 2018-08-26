@@ -86,7 +86,7 @@ async function getEmbedMessage(post, context) {
         embed.setTitle(await post.title.slice(0, 256));
         embed.setAuthor("u/" + await post.author.name, undefined, await post.url);
         embed.setColor(16729344);
-        embed.setFooter(await post.subreddit_name_prefixed + " --> Score: " + await post.score + " --> Requested by " + context.author.username);
+        embed.setFooter(await post.subreddit_name_prefixed + " → Score: " + await post.score + " → Requested by " + context.author.username);
     
     return embed;
 }
