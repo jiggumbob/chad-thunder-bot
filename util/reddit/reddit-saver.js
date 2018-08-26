@@ -1,5 +1,4 @@
 const snoowrap = require("snoowrap");
-const redditerrors = require("./reddit-errors.js");
 
 exports.RedditSaver = class RedditSaver {
     /* Creates a RedditSaver (should only need one) which stores
@@ -18,11 +17,12 @@ exports.RedditSaver = class RedditSaver {
     async save(subredditName) {
         try {
             let postListing = await this.Reddit.getSubreddit(subredditName).getHot({
-                "limit": this.numPosts - 1});
+                "limit": this.numPosts - 1
+            });
             let idList = postListing.map(post => post.id); // make list of id's
             this.subreddits[subredditName] = idList;
         } catch (e) {
-            throw redditerrors.InvalidSubredditError;
+            throw e;
         }
     }
 
