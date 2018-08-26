@@ -1,6 +1,7 @@
-const http = require('http');
-const express = require('express');
+const http = require("http");
+const express = require("express");
 const app = express();
+
 app.get("/", (request, response) => {
   console.log(Date.now() + " Ping Received");
   response.sendStatus(200);
@@ -10,31 +11,39 @@ setInterval(() => {
   http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
 }, 280000);
 
-const Discord = require('discord.js');
+const Discord = require("discord.js");
+const Enmap = require("enmap");
+const fs = require("fs");
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
+client.aliases = new Discord.Collection();
 
-client.on('ready', () => {
-  console.log('Ready!');
+fs.readdir("./events/", (err, files) => {
+  if (err) return console.error(err);
+  files.forEach(file => {
+    const event = require(`./events/${file}`);
+    let eventName = file.split(".")[0];
+    client.on(eventName, event.bind(null, client));
+  });
 });
 
-const prefix = 'c!';
-client.on("message", message => {
-  if (message.author.bot) return;
-  if(message.content.indexOf(prefix) !== 0) return;
-
-  // This is the best way to define args. Trust me.
-  const args = message.content.slice(prefix.length).trim().split(/ +/g);
-  const command = args.shift().toLowerCase();
-
-  // The list of if/else is replaced with those simple 2 lines:
-  try {
-    let commandFile = require(`./commands/${command}.js`);
-    commandFile.run(client, message, args);
-  } catch (err) {
-    console.error(err);
-  }
+fs.readdir("./commands/", (err, files) => {
+  if(err) console.error(err);
+  console.log(`Loading a total of ${files.length} commands.`);
+  // Loops through each file in that folder
+  files.forEach(f=> {
+    // require the file itself in memory
+    let props = require(`./commands/${f}`);
+    console.log(`Loading Command: ${props.help.name}`);
+    // add the command to the Commands Collection
+    client.commands.set(props.help.name, props);
+    // Loops through each Alias in that command
+    props.conf.aliases.forEach(alias => {
+      // add the alias to the Aliases Collection
+      client.aliases.set(alias, props.help.name);
+    });
+  });
 });
 
 client.login(process.env.TOKEN);
