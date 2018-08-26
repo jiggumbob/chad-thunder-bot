@@ -39,7 +39,6 @@ exports.processRandomCommand = async function processRandomCommand(subredditName
         let randomPost = await redditSaver.getRandomPost(subredditName);
         await printRedditPost(randomPost, context);
     } catch (e) {
-        console.log(e);
         context.channel.send("That subreddit does not exist, please try again.");
     }
 }
@@ -47,7 +46,6 @@ exports.processRandomCommand = async function processRandomCommand(subredditName
 /* Handles functionality of the reddit u command. */
 exports.processUrlCommand = async function processUrlCommand(url, context) {
     try {
-        context.delete();
         let botMessage = await context.channel.send("Retrieving that post...");
         var post;
 
@@ -60,17 +58,10 @@ exports.processUrlCommand = async function processUrlCommand(url, context) {
         });
 
         await botMessage.delete();
-      
-        let embed = new Discord.RichEmbed();
-        embed.setDescription("Request by " + context.author.username);
-        embed.setColor(16729344);
-      
-        await context.channel.send(embed);
 
         await printRedditPost(post, context);
 
     } catch (e) {
-        console.log(e);
         context.channel.send("Error.");
     }
 }
@@ -90,22 +81,20 @@ async function getPostContent(post) {
 }
 
 /* Returns a Reddit post in embed.*/
-async function getEmbedMessage(post) {
+async function getEmbedMessage(post, context) {
     let embed = new Discord.RichEmbed();
         embed.setTitle(await post.title.slice(0, 256));
         embed.setAuthor("u/" + await post.author.name, undefined, await post.url);
         embed.setColor(16729344);
-        embed.setFooter("Score: " + await post.score);
+        embed.setFooter(await post.subreddit_name_prefixed + " --> Score: " + await post.score + " --> Requested by " + context.author.username);
     
     return embed;
 }
 
-/* Actually prints the reddit post/URL with embedding. 
+/* Context is the message that the user sent in the Discord chat, allowing for this file to be 
+  able to send a message in the same folder. */
 
-  Context is the message that the user sent in the Discord chat, allowing for this file to be 
-  able to send a message in the same folder.
-
-*/
+/* Prints out the reddit post, requester, etc. */
 
 async function printRedditPost(post, context) {
     // first check if post/ discord channels are NSFW/not\
@@ -115,13 +104,8 @@ async function printRedditPost(post, context) {
     }
     
     await context.delete();
-    let requestedMessage = new Discord.RichEmbed();
-        requestedMessage.setDescription("Request by " + context.author.username);
-        requestedMessage.setColor(16729344);
   
-    let embed = await getEmbedMessage(post);
-      
-    await context.channel.send(requestedMessage);
+    let embed = await getEmbedMessage(post, context);
   
     if (await post.selftext.length == 0) {
         // print URL
