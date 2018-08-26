@@ -5,7 +5,7 @@ exports.run = async (client, message, args) => {
     var cutArgs = message.content.substr(message.content.indexOf(" ") + 1);
 
     var active;
-    if (message.channel.nsfw === false) {
+    if (!message.channel.nsfw) {
         active = "active";
     } else {
         active = "off";
@@ -23,10 +23,10 @@ exports.run = async (client, message, args) => {
 }
 
 exports.conf = {
-    enabled: true, // not used yet
-    guildOnly: false, // not used yet
+    enabled: true,
+    guildOnly: false,
     aliases: ["g"],
-    permLevel: 0 // Permissions Required, higher is more power
+    permLevel: 0
 };
 
 exports.help = {

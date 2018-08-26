@@ -4,7 +4,9 @@ exports.RedditSaver = class RedditSaver {
     /* Creates a RedditSaver (should only need one) which stores
     lists of posts associated with a subreddit.
 
-    @param: Instance of reddit API, and number of posts to be saved from a
+    @param:
+    1. Instance of reddit API
+    2. Number of posts to be saved from a
     subreddit.
     */
     constructor(redditInstance, numPosts) {
@@ -13,7 +15,7 @@ exports.RedditSaver = class RedditSaver {
         this.numPosts = numPosts;
     }
 
-    /* Saves [this.numPosts] hot posts from specified subreddit.*/
+    /* Saves this.numPosts hot posts from specified subreddit.*/
     async save(subredditName) {
         try {
             let postListing = await this.Reddit.getSubreddit(subredditName).getHot({

@@ -6,6 +6,7 @@ exports.run = (client, message, args) => {
         embed.setTitle("Commands");
         embed.setDescription("Use " + process.env.PREFIX + "help <command> for details.");
         embed.setColor(0xffff00);
+        // list every command and its description
         client.commands.forEach(function(c) {
             embed.addField(c.help.name, c.help.description);
         });
@@ -24,10 +25,10 @@ exports.run = (client, message, args) => {
 }
 
 exports.conf = {
-    enabled: true, // not used yet
-    guildOnly: false, // not used yet
+    enabled: true,
+    guildOnly: false,
     aliases: [],
-    permLevel: 0 // Permissions Required, higher is more power
+    permLevel: 0
 };
 
 exports.help = {
