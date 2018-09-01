@@ -46,4 +46,13 @@ fs.readdir("./commands/", (err, files) => {
   });
 });
 
+// app.get('/', function (req, res) {
+//   res.send('Hello World!'); // This will serve the request to '/'.
+// });
+
+// app.listen(3306, function () {
+//   console.log('Chad is listening to port 3306.');
+// });
+
+
 client.login(process.env.TOKEN);
