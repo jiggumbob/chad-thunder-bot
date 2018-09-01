@@ -1,13 +1,13 @@
-exports.run = async (client, message, args) => {
-    const snoowrap = require("snoowrap");
-    const redditutil = require("../util/reddit/reddit-util.js");
-    const Reddit = new snoowrap({
-        userAgent: "Discord: chad-thunder-bot",
-        clientId: process.env.REDDIT_CLIENT_ID,
-        clientSecret: process.env.REDDIT_CLIENT_SECRET,
-        refreshToken: process.env.REDDIT_REFRESH_TOKEN
-    });
+const snoowrap = require("snoowrap");
+const redditutil = require("../util/reddit/reddit-util.js");
+const Reddit = new snoowrap({
+    userAgent: "Discord: chad-thunder-bot",
+    clientId: process.env.REDDIT_CLIENT_ID,
+    clientSecret: process.env.REDDIT_CLIENT_SECRET,
+    refreshToken: process.env.REDDIT_REFRESH_TOKEN
+});
 
+exports.run = async (client, message, args) => {
     let commands = message.content.split(" ");
     let subcommand = commands[1];
     let argument = commands[2];
