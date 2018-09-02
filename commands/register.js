@@ -1,5 +1,7 @@
+var registerUtil = require("../util/economy/register.js");
+
 exports.run = async (client, message, args) => {
-    await message.channel.send("Currently in development.");
+    await registerUtil.registerUser(message);
 }
 
 exports.conf = {

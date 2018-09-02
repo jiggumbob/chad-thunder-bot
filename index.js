@@ -33,6 +33,9 @@ fs.readdir("./commands/", (err, files) => {
   console.log(`Loading a total of ${files.length} commands.`);
   // Loops through each file in that folder
   files.forEach(f=> {
+    if (fs.lstatSync("./commands/"+f).isDirectory()) {
+      console.log("true");
+    }
     // require the file itself in memory
     let props = require(`./commands/${f}`);
     console.log(`Loading Command: ${props.help.name}`);
@@ -45,14 +48,5 @@ fs.readdir("./commands/", (err, files) => {
     });
   });
 });
-
-// app.get('/', function (req, res) {
-//   res.send('Hello World!'); // This will serve the request to '/'.
-// });
-
-// app.listen(3306, function () {
-//   console.log('Chad is listening to port 3306.');
-// });
-
 
 client.login(process.env.TOKEN);
