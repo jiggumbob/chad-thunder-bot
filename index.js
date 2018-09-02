@@ -28,16 +28,25 @@ fs.readdir("./events/", (err, files) => {
   });
 });
 
-fs.readdir("./commands/", (err, files) => {
-  if(err) console.error(err);
-  console.log(`Loading a total of ${files.length} commands.`);
-  // Loops through each file in that folder
-  files.forEach(f=> {
-    if (fs.lstatSync("./commands/"+f).isDirectory()) {
-      console.log("true");
+function getFiles (dir, files_){
+    files_ = files_ || [];
+    var files = fs.readdirSync(dir);
+    for (var i in files){
+        var name = dir + '/' + files[i];
+        if (fs.statSync(name).isDirectory()){
+            getFiles(name, files_);
+        } else {
+            files_.push(name);
+        }
     }
+    return files_;
+}
+
+let commandsArr = getFiles("./commands");
+console.log(`Loading a total of ${commandsArr.length} commands.`);
+for (var i = 0; i< commandsArr.length; i++) {
     // require the file itself in memory
-    let props = require(`./commands/${f}`);
+    let props = require(commandsArr[i]);
     console.log(`Loading Command: ${props.help.name}`);
     // add the command to the Commands Collection
     client.commands.set(props.help.name, props);
@@ -46,7 +55,6 @@ fs.readdir("./commands/", (err, files) => {
       // add the alias to the Aliases Collection
       client.aliases.set(alias, props.help.name);
     });
-  });
-});
+}
 
 client.login(process.env.TOKEN);

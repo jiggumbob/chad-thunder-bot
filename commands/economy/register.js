@@ -1,7 +1,7 @@
-var registerUtil = require("../util/economy/register.js");
+var registerUtil = require("../../util/economy/register.js");
 
 exports.run = async (client, message, args) => {
-    await registerUtil.registerUser(message);
+    registerUtil.registerUser(message);
 }
 
 exports.conf = {

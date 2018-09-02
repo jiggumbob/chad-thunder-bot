@@ -14,10 +14,10 @@ exports.run = async (client, message, args) => {
 
     switch (subcommand) {
         case "r":
-            await redditutil.processRandomCommand(argument, message);
+            redditutil.processRandomCommand(argument, message);
             break;
         case "u":
-            await redditutil.processUrlCommand(argument, message);
+            redditutil.processUrlCommand(argument, message);
             break;
         default:
             message.channel.send("Unrecognized reddit subcommand.");

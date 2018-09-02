@@ -1,19 +1,30 @@
 var sql_connection = require("../sql-connection.js").sql_connection;
+const Discord = require("discord.js");
 
 exports.registerUser = async function registerUser (context) {
-    let user_id = context.author.id;
+    let user = context.channel.guild.member(context.author);
   
     // check if user is already registered
-    sql_connection.query("SELECT 1 FROM UserInfo WHERE user_id = " + user_id, function(error, results, fields) {
+    sql_connection.query("SELECT 1 FROM UserInfo WHERE user_id = " + user.id, function(error, results, fields) {
+        let embedMessage = new Discord.RichEmbed();
+        let embedString;
+      
         if(results.length > 0) {
-            context.channel.send("You are already registered, no need to register again!");
-            return;
+            embedString = "You are already registered, no need to register again!";
         } else {
             // not registered, register them with 100 chad bucks to start
-            let add_query = "INSERT INTO UserInfo (user_id, chad_bucks) VALUES (" + user_id + ", 100)";
-            sql_connection.query(add_query, function(error, results, fields) {
-                context.channel.send("You are now registered to the Chad Economy and have been given 100 Chad Bucks! Have fun!");
+            sql_connection.query("INSERT INTO UserInfo (user_id, chad_bucks) VALUES (" 
+                                 + user.id + ", 100)", function(error, results, fields) {        
             });
+            embedString = "You are now registered to the Chad Economy and have been given 100 Chad Bucks! Have fun!";
         }
+        
+        embedMessage.setTitle("Register");
+        embedMessage.setAuthor(user.nickname, user.user.displayAvatarURL);
+        embedMessage.setDescription(embedString);
+        embedMessage.setThumbnail("https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/"
+                                  + "120/twitter/147/smiling-face-with-sunglasses_1f60e.png");
+        embedMessage.setColor(0xFFDB1D);
+        context.channel.send(embedMessage);
     });
 }
