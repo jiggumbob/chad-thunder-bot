@@ -38,15 +38,16 @@ var clearPosts = setInterval(function() {
 exports.processRandomCommand = async function processRandomCommand(subredditName, context) {
     try {
         if (!await redditSaver.isSaved(subredditName)) {
-            var botMessage = await context.channel.send("Saving more posts from that subreddit for faster access...");
+            var botSaveMessage = await context.channel.send("Saving more posts from that subreddit for faster access...");
             await redditSaver.save(subredditName);
-            await botMessage.delete();
         }
 
         let randomPost = await redditSaver.getRandomPost(subredditName);
-        await printRedditPost(randomPost, context);
+        printRedditPost(randomPost, context);
+        botSaveMessage.delete();
     } catch (e) {
-        context.channel.send("That subreddit does not exist, please try again.");
+        botSaveMessage.delete();
+        context.channel.send(await getEmbedError("That subreddit doesn't exist. Maybe try one that does?"));
     }
 }
 
@@ -57,7 +58,7 @@ exports.processRandomCommand = async function processRandomCommand(subredditName
 */
 exports.processUrlCommand = async function processUrlCommand(url, context) {
     try {
-        let botMessage = await context.channel.send("Retrieving that post...");
+        var botRetrieveMessage = await context.channel.send("Retrieving that post...");
         var post;
 
         let urlJSON = url + ".json";
@@ -68,10 +69,11 @@ exports.processUrlCommand = async function processUrlCommand(url, context) {
             post = await Reddit.getSubmission(id);
         });
 
-        await botMessage.delete();
-        await printRedditPost(post, context);
+        botRetrieveMessage.delete();
+        printRedditPost(post, context);
     } catch (e) {
-        context.channel.send("Error.");
+        botRetrieveMessage.delete();
+        context.channel.send(await getEmbedError("Invalid post link. Maybe try providing a valid one?"));
     }
 }
 
@@ -79,7 +81,7 @@ exports.processUrlCommand = async function processUrlCommand(url, context) {
     @param:
     1. Reddit submission object
 */
-async function getPostContent(post) {
+async function getLongPostContent(post) {
     let content = [];
     let text = await post.selftext;
     // split the string into 2000 character strings (to fit in a discord message)
@@ -100,14 +102,30 @@ async function getPostContent(post) {
 async function getEmbedMessage(post, context) {
     let embed = new Discord.RichEmbed();
     embed.setTitle(await post.title.slice(0, 256));
-    embed.setAuthor("u/" + await post.author.name, undefined, await post.url);
-    embed.setColor(16729344);
-    embed.setFooter(await post.subreddit_name_prefixed + " → Score: " + await post.score + " → Requested by " + context.author.username);
+    // use the permalink to make sure that even for image posts you get the reddit link, not the image  link
+    embed.setAuthor("u/" + await post.author.name, undefined, "https://www.reddit.com" + await post.permalink);
+    embed.setColor(0xFFDB1D);
+    embed.setFooter(await post.subreddit_name_prefixed + " → Score: " + 
+                    await post.score + " → Requested by " + context.channel.guild.member(context.author).nickname);
 
     return embed;
 }
 
-/* Prints out the reddit post, requester, etc. */
+/* */
+async function getEmbedError(errorMessage) {
+    let embed = new Discord.RichEmbed();
+    embed.setTitle("Reddit Error");
+    embed.setDescription(errorMessage);
+    embed.setColor(0xFF524C); // red, bad
+    embed.setThumbnail("https://emojipedia-us.s3.dualstack.us-west-1."
+                       + "amazonaws.com/thumbs/120/twitter/147/loudly-crying-face_1f62d.png");
+    return embed;
+}
+/* Prints out the reddit post, requester, etc. 
+    @param:
+    1. Reddit submission object
+    2. User's discord message (command to the bot)
+*/
 async function printRedditPost(post, context) {
     // first check if post/ discord channels are NSFW/not\
     if (await post.over_18 && !context.channel.nsfw) {
@@ -115,19 +133,19 @@ async function printRedditPost(post, context) {
         return;
     }
 
-    await context.delete();
+    context.delete();
 
     let embed = await getEmbedMessage(post, context);
 
     if (await post.selftext.length == 0) {
         // print URL
-        await context.channel.send(embed);
-        await context.channel.send(await post.url);
+        context.channel.send(embed);
+        context.channel.send(await post.url);
     } else {
         // print text post
-        for (let piece of await getPostContent(post)) {
+        for (let piece of await getLongPostContent(post)) {
             embed.setDescription(piece);
-            await context.channel.send(embed);
+            context.channel.send(embed);
         }
     }
 }

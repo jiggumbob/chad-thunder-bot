@@ -1,8 +1,8 @@
-exports.run = async (client, message, args) => {
-    // uses DuckDuckGo Instant Answer API to give wikipedia answer
-    var DDG = require('node-ddg-api').DDG;
-    var ddg = new DDG('chad-thunder-bot');
+// uses DuckDuckGo Instant Answer API to give wikipedia answer
+var DDG = require('node-ddg-api').DDG;
+var ddg = new DDG('chad-thunder-bot');
 
+exports.run = async (client, message, args) => {
     // removes prefix and command, leaves argument
     var cutArgs = message.content.substr(message.content.indexOf(" ") + 1);
 
