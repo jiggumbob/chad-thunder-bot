@@ -1,6 +1,7 @@
 var sql_connection = require("../sql-connection.js").sql_connection;
 const Discord = require("discord.js");
 
+/* Registers a user into the SQL database*/
 exports.registerUser = async function registerUser (context) {
     let user = context.channel.guild.member(context.author);
   
