@@ -1,10 +1,10 @@
 dependencies:
   discord.js: 11.4.2
-  enmap: 4.0.9
   express: 4.16.3
   googleapis: 33.0.0
   jquery: 3.3.1
   jsdom: 12.0.0
+  moment: 2.22.2
   mysql: 2.16.0
   node-ddg-api: 0.1.4
   snoowrap: 1.15.2
@@ -292,14 +292,6 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
-  /enmap/4.0.9:
-    dependencies:
-      lodash: 4.17.10
-    dev: false
-    peerDependencies:
-      better-sqlite-pool: ^0.1.2
-    resolution:
-      integrity: sha512-IPSUtL9fPxxAvp4KCgajz5Cxy5Pls1DtWkt275nAbo+CLfY1LjzvyAjbHi8S9QUDwZxRGaTlvshOt0XpltkPEA==
   /escape-html/1.0.3:
     dev: false
     resolution:
@@ -777,6 +769,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-3j+YVD2/lggr5IrRoMfNqDYwHc8=
+  /moment/2.22.2:
+    dev: false
+    resolution:
+      integrity: sha1-PCV/mDn8DpP/UxSWMiOeuQeD/2Y=
   /ms/2.0.0:
     dev: false
     resolution:
@@ -1333,11 +1329,11 @@ shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
   discord.js: ^11.4.2
-  enmap: ^4.0.9
   express: ^4.16.3
   googleapis: ^33.0.0
   jquery: ^3.3.1
   jsdom: ^12.0.0
+  moment: ^2.22.2
   mysql: ^2.16.0
   node-ddg-api: ^0.1.4
   snoowrap: ^1.15.2

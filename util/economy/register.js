@@ -1,6 +1,7 @@
 var sql_connection = require("../sql-connection.js").sql_connection;
 const Discord = require("discord.js");
 
+/* Registers a user into the SQL database*/
 exports.registerUser = async function registerUser (context) {
     let user = context.channel.guild.member(context.author);
   
@@ -13,8 +14,8 @@ exports.registerUser = async function registerUser (context) {
             embedString = "You are already registered, no need to register again!";
         } else {
             // not registered, register them with 100 chad bucks to start
-            sql_connection.query("INSERT INTO UserInfo (user_id, chad_bucks) VALUES (" 
-                                 + user.id + ", 100)", function(error, results, fields) {        
+            sql_connection.query("INSERT INTO UserInfo (user_id, chad_bucks, canClaimDaily) VALUES (" 
+                                 + user.id + ", 100, 1)", function(error, results, fields) {        
             });
             embedString = "You are now registered to the Chad Economy and have been given 100 Chad Bucks! Have fun!";
         }

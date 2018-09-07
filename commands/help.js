@@ -6,9 +6,11 @@ exports.run = async (client, message, args) => {
         embed.setTitle("Commands");
         embed.setDescription("Use " + process.env.PREFIX + "help <command> for details.");
         embed.setColor(0xFFDB1D);
-        // list every command and its description
+        // list every enabled command and its description
         client.commands.forEach(function(c) {
-            embed.addField(c.help.name, c.help.description);
+            if(c.conf.enabled) {
+                embed.addField(c.help.name, c.help.description);
+            }
         });
         message.channel.send(embed);
     } else {
