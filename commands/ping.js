@@ -13,11 +13,11 @@ exports.run = async (client, message, args) => {
     }
 
     let embed = new Discord.RichEmbed();
-    embed.setColor(0xffff00);
+    embed.setColor(0xFFDB1D);
     embed.setTitle("Ping");
     embed.setDescription(latency + " ms");
 
-    await responseMessage.edit(embed);
+    responseMessage.edit(embed);
 }
 
 exports.conf = {

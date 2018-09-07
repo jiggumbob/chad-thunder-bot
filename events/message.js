@@ -1,4 +1,5 @@
-module.exports = (client, message) => {
+const Discord = require("discord.js");
+module.exports = async (client, message) => {
     client.elevation = function(message) {
         /* This function should resolve to an ELEVATION level which
            is then sent to the command handler for verification*/
@@ -25,13 +26,25 @@ module.exports = (client, message) => {
     } else if (client.aliases.has(command)) {
         cmd = client.commands.get(client.aliases.get(command));
     } else {
-        message.channel.send("``" + process.env.PREFIX + command + "`` is not a command.");
+        let embed = new Discord.RichEmbed();
+        embed.setTitle("Unknown Command");
+        embed.setDescription("`" + process.env.PREFIX + command + "` is not a command.\n"
+                             + "Try issuing an actual command?\n"
+                             + "Use `" + process.env.PREFIX + "help` to see what they are.");
+        embed.setThumbnail("https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/black-question-mark-ornament_2753.png");
+        embed.setColor(0xFF524C);
+        message.channel.send(embed);
     }
 
     if (cmd) {
         // Check user's perm level against required perms
         if (perms < cmd.conf.permLevel) {
-            message.channel.send("You don't have permission to use this command.");
+            let embed = new Discord.RichEmbed();
+            embed.setTitle("Insufficient Permission");
+            embed.setDescription("You don't have permission to use this command.\n Maybe try not using it? Or getting permission?");
+            embed.setThumbnail("https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/no-entry_26d4.png");
+            embed.setColor(0xFF524C);
+            message.channel.send(embed);
             return;
         }
         // Run the `exports.run()` function defined in each command.

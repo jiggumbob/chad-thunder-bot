@@ -1,25 +1,29 @@
-exports.run = async (client, message, args) => {
-    // uses DuckDuckGo Instant Answer API to give wikipedia answer
-    var DDG = require('node-ddg-api').DDG;
-    var ddg = new DDG('chad-thunder-bot');
+// uses DuckDuckGo Instant Answer API to give wikipedia answer
+var DDG = require("node-ddg-api").DDG;
+var ddg = new DDG("chad-thunder-bot");
+const Discord = require("discord.js");
 
+exports.run = async (client, message, args) => {
     // removes prefix and command, leaves argument
     var cutArgs = message.content.substr(message.content.indexOf(" ") + 1);
-
-    await ddg.instantAnswer(cutArgs, {
-        skip_disambig: '0'
-    }, function(err, response) {
-        // if no response is given
-        if (err) {
-            message.channel.send("``" + cutArgs + "`` is not a valid argument.");
-        }
-
-        // Removes disambiguation from the wikipedia url
+    ddg.instantAnswer(cutArgs, {skip_disambig: '0'}, async function(err, response) {
         let result = response.AbstractURL;
-        if (result.includes("_(disambiguation)")) {
-            result = result.slice(0, result.indexOf("_(disambiguation)"));
+        
+        if(result.length == 0) {
+            // there was no result
+            let embed = new Discord.RichEmbed();
+            embed.setTitle("No Result Found");
+            embed.setDescription("Uh oh! No result was found for that search!");
+            embed.setThumbnail("https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/confused-face_1f615.png");
+            embed.setColor(0xFF524C);
+            message.channel.send(embed);
+        } else {     
+            // there is result, remove disambiguation URL from wikipedia response
+            if (result.includes("_(disambiguation)")) {
+                result = result.slice(0, result.indexOf("_(disambiguation)"));
+            }
+            await message.channel.send(result);
         }
-        message.channel.send(result);
     });
 }
 
