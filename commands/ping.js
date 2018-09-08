@@ -15,7 +15,9 @@ exports.run = async (client, message, args) => {
     let embed = new Discord.RichEmbed();
     embed.setColor(0xFFDB1D);
     embed.setTitle("Ping");
-    embed.setDescription(latency + " ms");
+    embed.setDescription(latency + " ms" + "\n\nGood enough?");
+    embed.setThumbnail("https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/"
+                      +"thumbs/120/twitter/147/clockwise-downwards-and-upwards-open-circle-arrows_1f503.png");
 
     responseMessage.edit(embed);
 }
