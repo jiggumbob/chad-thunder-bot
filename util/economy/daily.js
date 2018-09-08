@@ -1,7 +1,7 @@
 var sql_connection = require("../sql-connection.js").sql_connection;
 var fs = require("fs");
 var moment = require("moment");
-const Discord = require("discord.js");
+const embedTool = require("../embed-message-tool.js");
 
 /* Gives a user their daily reward, if they are eligible to receive one.
   
@@ -13,28 +13,25 @@ exports.dailyReward = function dailyReward(context) {
     let user = context.channel.guild.member(context.author);
   
     sql_connection.query("SELECT chad_bucks, canClaimDaily FROM UserInfo WHERE user_id = " + user.id, function (error, results, fields) {
-        let embedMessage = new Discord.RichEmbed();
         let embedString;
-        let embedColor;
+        let isError = false; // errors have different embed colors
         let embedImage;
       
         // user is not registered
         if (results.length == 0) {
-            embedColor = 0xFF524C; // red and sad emoji --> not registered
-            embedImage = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/crying-face_1f622.png";
+            isError = true;
+            embedImage = "crying face";
             embedString = "You are not registered! Use `" + process.env.PREFIX + "register` to register!";
         } 
         // user already claimed reward today
-        else if (results[0].canClaimDaily == 0) {
-            embedColor = 0xFFDB1D; // yellow and whoops emoji --> already claimed
-            embedImage = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/face-with-open-mouth_1f62e.png";
+        else if (results[0].canClaimDaily.readInt8(0) == 0) { // stored as BIT in SQL, in node it is a buffer object, we will read as int
+            embedImage = "face open mouth";
             embedString = "You have already claimed your daily reward today!\nCome back tomorrow for more!";
         } 
         // user can claim reward
         else {                   
             const rewardAmount = 300;
-            embedColor = 0xFFDB1D; // yellow and cash emoji --> successful claim
-            embedImage = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/money-bag_1f4b0.png";
+            embedImage = "bag of cash";
             embedString = "Hooray! You have claimed your daily reward of " + rewardAmount + " Chad Bucks today!";       
             // make them unable to claim a reward again today and give them the money
             sql_connection.query("UPDATE UserInfo SET canClaimDaily = 0, " 
@@ -42,14 +39,10 @@ exports.dailyReward = function dailyReward(context) {
                                  + " WHERE user_id = " + user.id, function (error, results, fields) {
             });
         }
-        
-          embedMessage.setTitle("Daily Reward:");
-          embedMessage.setAuthor(user.displayName, user.user.displayAvatarURL);
-          embedMessage.setDescription(embedString);
-          embedMessage.setThumbnail(embedImage);
-          embedMessage.setColor(embedColor);
-        
-          context.channel.send(embedMessage);
+      
+        let response = embedTool.createMessage("Daily Reward:", embedString, embedImage, isError);
+        response.setAuthor(user.displayName, user.user.displayAvatarURL);
+        context.channel.send(response);
     });
 }
 

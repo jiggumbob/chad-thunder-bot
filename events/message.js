@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+const embedTool = require("../util/embed-message-tool.js");
 module.exports = async (client, message) => {
     client.elevation = function(message) {
         /* This function should resolve to an ELEVATION level which
@@ -26,25 +26,25 @@ module.exports = async (client, message) => {
     } else if (client.aliases.has(command)) {
         cmd = client.commands.get(client.aliases.get(command));
     } else {
-        let embed = new Discord.RichEmbed();
-        embed.setTitle("Unknown Command");
-        embed.setDescription("`" + process.env.PREFIX + command + "` is not a command.\n"
-                             + "Try issuing an actual command?\n"
-                             + "Use `" + process.env.PREFIX + "help` to see what they are.");
-        embed.setThumbnail("https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/black-question-mark-ornament_2753.png");
-        embed.setColor(0xFF524C);
-        message.channel.send(embed);
+        message.channel.send(
+            embedTool.createMessage("Unknown Command",
+                                    "`" + process.env.PREFIX + command + "` is not a command.\n"
+                                    + "Try issuing an actual command?\nUse `" + process.env.PREFIX + "help` to see what they are.",
+                                    "question",
+                                    true)               
+        );
+        return;
     }
 
     if (cmd) {
         // Check user's perm level against required perms
         if (perms < cmd.conf.permLevel) {
-            let embed = new Discord.RichEmbed();
-            embed.setTitle("Insufficient Permission");
-            embed.setDescription("You don't have permission to use this command.\n Maybe try not using it? Or getting permission?");
-            embed.setThumbnail("https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/no-entry_26d4.png");
-            embed.setColor(0xFF524C);
-            message.channel.send(embed);
+            message.channel.send(
+                embedTool.createMessage("Insufficient Permission",
+                                    "You don't have permission to use this command.\n Maybe try not using it? Or getting permission?",
+                                    "entry denied",
+                                    true)              
+            );
             return;
         }
         // Run the `exports.run()` function defined in each command.

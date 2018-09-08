@@ -1,6 +1,6 @@
 const {google} = require('googleapis');
 const customsearch = google.customsearch('v1');
-const Discord = require("discord.js");
+const embedTool = require("../util/embed-message-tool.js");
 
 exports.run = async (client, message, args) => {
     var cutArgs = message.content.substr(message.content.indexOf(" ") + 1);
@@ -24,12 +24,12 @@ exports.run = async (client, message, args) => {
         message.channel.send(JSON.parse(JSON.stringify(res.data.items['0'].link)));
     } catch(e) {
         // there was no result
-        let embed = new Discord.RichEmbed();
-        embed.setTitle("No Result Found");
-        embed.setDescription("Uh oh! No result was found for that search!");
-        embed.setThumbnail("https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/confused-face_1f615.png");
-        embed.setColor(0xFF524C);
-        message.channel.send(embed);
+        message.channel.send(
+            embedTool.createMessage("No Result Found",
+                                    "Uh oh! No result was found for that search!",
+                                    "confused face",
+                                    true)
+        );
     }
 }
 
