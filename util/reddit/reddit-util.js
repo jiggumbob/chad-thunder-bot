@@ -1,5 +1,4 @@
-const Discord = require("discord.js");
-
+const embedTool = require("../embed-message-tool.js");
 const snoowrap = require("snoowrap");
 const redditsaver = require("./reddit-saver.js");
 const Reddit = new snoowrap({
@@ -38,15 +37,12 @@ var clearPosts = setInterval(function() {
 exports.processRandomCommand = async function processRandomCommand(subredditName, context) {
     try {
         if (!await redditSaver.isSaved(subredditName)) {
-            var botSaveMessage = await context.channel.send("Saving more posts from that subreddit for faster access...");
             await redditSaver.save(subredditName);
         }
 
         let randomPost = await redditSaver.getRandomPost(subredditName);
         printRedditPost(randomPost, context);
-        botSaveMessage.delete();
     } catch (e) {
-        botSaveMessage.delete();
         context.channel.send(await getEmbedError("That subreddit doesn't exist. Maybe try one that does?"));
     }
 }
@@ -100,26 +96,23 @@ async function getLongPostContent(post) {
     2. User's discord message (command to the bot)
 */
 async function getEmbedMessage(post, context) {
-    let embed = new Discord.RichEmbed();
-    embed.setTitle(await post.title.slice(0, 256));
+    let embed = embedTool.createMessage(await post.title.slice(0, 256),
+                                    undefined,
+                                    undefined,
+                                    false);
     // use the permalink to make sure that even for image posts you get the reddit link, not the image  link
     embed.setAuthor("u/" + await post.author.name, undefined, "https://www.reddit.com" + await post.permalink);
-    embed.setColor(0xFFDB1D);
     embed.setFooter(await post.subreddit_name_prefixed + " → Score: " + 
                     await post.score + " → Requested by " + context.channel.guild.member(context.author).nickname);
-
     return embed;
 }
 
-/* */
+/* Create an embed error message for a certain text*/
 async function getEmbedError(errorMessage) {
-    let embed = new Discord.RichEmbed();
-    embed.setTitle("Reddit Error");
-    embed.setDescription(errorMessage);
-    embed.setColor(0xFF524C); // red, bad
-    embed.setThumbnail("https://emojipedia-us.s3.dualstack.us-west-1."
-                       + "amazonaws.com/thumbs/120/twitter/147/loudly-crying-face_1f62d.png");
-    return embed;
+    return embedTool.createMessage("Reddit Error",
+                                    errorMessage,
+                                    "loud crying",
+                                    true);
 }
 /* Prints out the reddit post, requester, etc. 
     @param:
@@ -129,7 +122,7 @@ async function getEmbedError(errorMessage) {
 async function printRedditPost(post, context) {
     // first check if post/ discord channels are NSFW/not\
     if (await post.over_18 && !context.channel.nsfw) {
-        context.channel.send("This post is NSFW. Go to an NSFW channel.");
+        context.channel.send(await getEmbedError("That is an NSFW post. Maybe go to an NSFW chat?"));
         return;
     }
 

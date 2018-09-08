@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+const embedTool = require("../util/embed-message-tool.js");
 
 exports.run = async (client, message, args) => {
     // calculates the time difference between when user's message was sent and when the bot sent one back
@@ -12,13 +12,10 @@ exports.run = async (client, message, args) => {
         latency = responseMessage.createdTimestamp - message.createdTimestamp;
     }
 
-    let embed = new Discord.RichEmbed();
-    embed.setColor(0xFFDB1D);
-    embed.setTitle("Ping");
-    embed.setDescription(latency + " ms" + "\n\nGood enough?");
-    embed.setThumbnail("https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/"
-                      +"thumbs/120/twitter/147/clockwise-downwards-and-upwards-open-circle-arrows_1f503.png");
-
+    let embed = embedTool.createMessage("Ping",
+                                        latency + " ms" + "\n\nGood enough?",
+                                        "ping loading",
+                                        false);
     responseMessage.edit(embed);
 }
 

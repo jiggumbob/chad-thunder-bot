@@ -6,7 +6,7 @@ const Reddit = new snoowrap({
     clientSecret: process.env.REDDIT_CLIENT_SECRET,
     refreshToken: process.env.REDDIT_REFRESH_TOKEN
 });
-const Discord = require("discord.js");
+const embedTool = require("../util/embed-message-tool.js");
 
 exports.run = async (client, message, args) => {
     let commands = message.content.split(" ");
@@ -21,13 +21,12 @@ exports.run = async (client, message, args) => {
             redditutil.processUrlCommand(argument, message);
             break;
         default:
-            let embed = new Discord.RichEmbed();
-            embed.setTitle("Unknown Reddit Subcommand");
-            embed.setDescription("Maybe try using the command correctly? \n" 
-                                 + "Use `" + process.env.PREFIX + "help reddit` for info.");
-            embed.setThumbnail("https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/black-question-mark-ornament_2753.png");
-            embed.setColor(0xFF524C);
-            message.channel.send(embed);
+            message.channel.send(
+                embedTool.createMessage("Unknown Reddit Subcommand", 
+                                        "Maybe try using the command correctly? \n" + "Use `" + process.env.PREFIX + "help reddit` for info.",
+                                        "question",
+                                        true)
+            );
     }
 }
 
