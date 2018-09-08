@@ -5,11 +5,19 @@ const normalColor = 0xFFDB1D;
 
 exports.createMessage = function createErrorMessage (title, description, imageName, isError) {
     let embedMessage = new Discord.RichEmbed();
-    embedMessage.setTitle(title);
-    embedMessage.setDescription(description);
-    embedMessage.setThumbnail(emojis[imageName]);
-    embedMessage.setColor(isError ? errorColor : normalColor);
-  
+    if (!(typeof title === "undefined")) {
+        embedMessage.setTitle(title);
+    }
+    if (!(typeof description === "undefined")) {
+       embedMessage.setDescription(description);
+    }
+    if (!(typeof imageName === "undefined")) {
+       embedMessage.setThumbnail(emojis[imageName]);
+    }
+    if (!(typeof isError === "undefined")) {
+       embedMessage.setColor(isError ? errorColor : normalColor);
+    }
+    
     return embedMessage;
 };
 
