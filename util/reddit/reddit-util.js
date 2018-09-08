@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-
+const embedTool = require("../embed-message-tool.js");
 const snoowrap = require("snoowrap");
 const redditsaver = require("./reddit-saver.js");
 const Reddit = new snoowrap({
@@ -111,15 +111,12 @@ async function getEmbedMessage(post, context) {
     return embed;
 }
 
-/* */
+/* Create an embed error message for a certain text*/
 async function getEmbedError(errorMessage) {
-    let embed = new Discord.RichEmbed();
-    embed.setTitle("Reddit Error");
-    embed.setDescription(errorMessage);
-    embed.setColor(0xFF524C); // red, bad
-    embed.setThumbnail("https://emojipedia-us.s3.dualstack.us-west-1."
-                       + "amazonaws.com/thumbs/120/twitter/147/loudly-crying-face_1f62d.png");
-    return embed;
+    return embedTool.createMessage("Reddit Error",
+                                    errorMessage,
+                                    "loud crying",
+                                    true);
 }
 /* Prints out the reddit post, requester, etc. 
     @param:
