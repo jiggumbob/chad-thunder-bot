@@ -3,6 +3,12 @@ var fs = require("fs");
 var moment = require("moment");
 const Discord = require("discord.js");
 
+/* Gives a user their daily reward, if they are eligible to receive one.
+  
+  First checks if they are registered, if not, prompts them to register.
+  Then if they already claimed a reward today, tells them so.
+  Finally allows them to claim their reward.
+*/
 exports.dailyReward = function dailyReward(context) {
     let user = context.channel.guild.member(context.author);
   
