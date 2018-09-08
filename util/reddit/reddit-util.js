@@ -37,15 +37,12 @@ var clearPosts = setInterval(function() {
 exports.processRandomCommand = async function processRandomCommand(subredditName, context) {
     try {
         if (!await redditSaver.isSaved(subredditName)) {
-            // var botSaveMessage = await context.channel.send("Saving more posts from that subreddit for faster access...");
             await redditSaver.save(subredditName);
         }
 
         let randomPost = await redditSaver.getRandomPost(subredditName);
         printRedditPost(randomPost, context);
-        // botSaveMessage.delete();
     } catch (e) {
-        // botSaveMessage.delete();
         context.channel.send(await getEmbedError("That subreddit doesn't exist. Maybe try one that does?"));
     }
 }
