@@ -1,5 +1,5 @@
 # Chad Thunder Bot
-Chad Thunder Bot is **currently in development**, but still has some very useful functionality!
+Chad Thunder Bot is **currently in development**
 
 ## Features
 **Reddit Integration**
@@ -8,24 +8,25 @@ Chad Thunder Bot is **currently in development**, but still has some very useful
 * Share Reddit posts with your friends without them closing out of Discord
 
 **Wikipedia and Google Search** 
-* Search Google for you need
+* Search Google for what you need
 * Wikipedia is there to give you all the information you need right in Discord
 
 **Administration Tools**
 * Clear command lets you rid the chat of spam in an instant
+* Kick command lets you get rid of those pesky users for a little bit
+* Ban command lets you begone those really pesky ones forever
 
-### Coming Soon
+### Under Development
 **Economy**
-* Play poker, roulette, and other games to earn currency
-* Spend currency on items in various shops
-* Earn even more money with quests and challenges
+* Claim daily currency rewards
+* Use currency to gamble and play games such as roulette, blackjack, slots, and more!
 
 **Music**
 * Play songs while chilling with your friends in voice chat
 
 
 ## About
-Chad Thunder Bot currently is not available to be added to your server, but we are getting close to the first release. 
+Chad Thunder Bot currently is not available to be added to your server, but we are working towards the first release. 
 
 ### Developers
 Jude Markabawi, Stanley Wang

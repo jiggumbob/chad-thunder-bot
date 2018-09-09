@@ -1,3 +1,13 @@
+/**
+ * Defines the balance command.
+ *
+ * Views a user's balance. Utilizes the balance utility function to 
+ * handle the entire process.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
 var registerUtil = require("../../util/economy/balance.js");
 
 exports.run = async (client, message, args) => {

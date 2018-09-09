@@ -1,13 +1,23 @@
+/**
+ * Defines the RedditSaver class.
+ *
+ * The RedditSaver class stores lists of Reddit post id's to be used for quick retrieval
+ * of random Reddit posts, rather than waiting long periods of time to continuously contact
+ * the Reddit API to get a new post every time a command is issued.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
 const snoowrap = require("snoowrap");
 
 exports.RedditSaver = class RedditSaver {
-    /* Creates a RedditSaver (should only need one) which stores
-    lists of posts associated with a subreddit.
-
-    @param:
-    1. Instance of reddit API
-    2. Number of posts to be saved from a
-    subreddit.
+    /**
+     * Creates a RedditSaver (should only need one) which stores
+     * lists of posts associated with a subreddit.
+     *
+     * @param  reddit API object  redditInstance  The object containing a reddit instance.
+     * @param  integer            numPosts        How many posts are by default saved for every subreddit.
     */
     constructor(redditInstance, numPosts) {
         this.Reddit = redditInstance;
@@ -15,7 +25,14 @@ exports.RedditSaver = class RedditSaver {
         this.numPosts = numPosts;
     }
 
-    /* Saves this.numPosts hot posts from specified subreddit.*/
+    /** 
+     * Saves hot posts from specified subreddit.
+     * 
+     * Number of posts saved it determined by this.numPost.
+     * Sends a request to Reddit to get these posts.
+     *
+     * @param  String  subredditName  Name of the subreddit to save posts from.
+     */
     async save(subredditName) {
         try {
             let postListing = await this.Reddit.getSubreddit(subredditName).getHot({
@@ -27,13 +44,21 @@ exports.RedditSaver = class RedditSaver {
             throw e;
         }
     }
-
-    /* Checks if the specified subreddit already has saved posts. */
+  
+    /** 
+     * Checks if the specified subreddit already has saved posts in the list.
+     *
+     * @param  String  subredditName  Name of the subreddit to check.
+     */
     async isSaved(subredditName) {
         return subredditName in this.subreddits;
     }
 
-    /* Gets a random saved post from the specified subreddit.*/
+    /**
+     * Gets a random saved post from the specified subreddit.*
+     *
+     * @param  String  subredditName  Name of subreddit to get a random saved post from.
+     */
     async getRandomPost(subredditName) {
         try {
             let rand = Math.floor(Math.random() * this.numPosts);

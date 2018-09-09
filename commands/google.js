@@ -1,3 +1,13 @@
+/**
+ * Defines the google command.
+ *
+ * Uses the Google API to search for something (safesearch if in NSFW channel).
+ * If no result is found, it informs the user.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
 const {google} = require('googleapis');
 const customsearch = google.customsearch('v1');
 const embedTool = require("../util/embed-message-tool.js");

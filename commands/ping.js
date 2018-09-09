@@ -1,3 +1,12 @@
+/**
+ * Defines the ping command.
+ *
+ * Informs the user of what the latency is between the server and the bot.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
 const embedTool = require("../util/embed-message-tool.js");
 
 exports.run = async (client, message, args) => {

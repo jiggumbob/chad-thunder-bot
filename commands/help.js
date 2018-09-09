@@ -1,3 +1,13 @@
+/**
+ * Defines the help command.
+ *
+ * Lists all of the commands the bot has available to the user. Does not
+ * display disabled commands.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
 const Discord = require("discord.js");
 
 exports.run = async (client, message, args) => {

@@ -1,3 +1,12 @@
+/**
+ * Defines the message event.
+ *
+ * Runs whenever a user sends a message.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
 const embedTool = require("../util/embed-message-tool.js");
 module.exports = async (client, message) => {
     client.elevation = function(message) {
