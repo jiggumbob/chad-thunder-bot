@@ -1,3 +1,13 @@
+/**
+ * Defines the registerUser function.
+ *
+ * The registerUser function is used by the register command to handle the process of
+ * adding a User to the database and ensuring there are no duplicates.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
 var sql_connection = require("../sql-connection.js").sql_connection;
 const embedTool = require("../embed-message-tool.js");
 

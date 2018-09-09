@@ -1,4 +1,13 @@
-// uses DuckDuckGo Instant Answer API to give wikipedia answer
+/**
+ * Defines the wikipedia command.
+ *
+ * Uses the DuckDuckGo Quick Answer API to get Wikipedia results from searches.
+ * If no search is found, it informs the user.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
 var DDG = require("node-ddg-api").DDG;
 var ddg = new DDG("chad-thunder-bot");
 const embedTool = require("../util/embed-message-tool.js");

@@ -1,4 +1,14 @@
-const embedTool = require("../util/embed-message-tool.js");
+/**
+ * Defines the kick command.
+ *
+ * Kicks a user from the server, if the bot is able to. Only users
+ * with sufficient permission are able to use this command.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
+const embedTool = require("../../util/embed-message-tool.js");
 
 exports.run = async (client, message, args) => {
     let embedString;

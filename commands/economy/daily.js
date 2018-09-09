@@ -1,3 +1,13 @@
+/**
+ * Defines the daily command.
+ *
+ * Attemps to claim a user's daily reward. Utilizes the dailyReward utility function
+ * to handle the entire process.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
 var dailyUtil = require("../../util/economy/daily.js");
 
 exports.run = async (client, message, args) => {

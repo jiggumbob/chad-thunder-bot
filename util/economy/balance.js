@@ -1,3 +1,14 @@
+/**
+ * Defines the balance function.
+ *
+ * The balance function is used by the balance command to handle the process of finding
+ * a user's balance. The user may be the commander or another user. It is in charge of 
+ * ensuring that the user is registered when attempting to find their balance.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
 var sql_connection = require("../sql-connection.js").sql_connection;
 const embedTool = require("../embed-message-tool.js");
 
