@@ -1,6 +1,6 @@
 {
   "name": "chad-thunderbot",
-  "version": "0.9.4",
+  "version": "0.10.0",
   "description": "A multi-purpose work in progress Discord bot.",
   "main": "index.js",
   "scripts": {
