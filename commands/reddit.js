@@ -1,3 +1,14 @@
+/**
+ * Provides a command to create embed messages in a streamlined manner.
+ *
+ * Ensures consistency in the design color throughout the bot messages and allows for
+ * easy switching between different colors without going through tons of files. Also provides a 
+ * list of emojis for use by embed messages, eliminating the need to put huge links in many files.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
 const snoowrap = require("snoowrap");
 const redditutil = require("../util/reddit/reddit-util.js");
 const Reddit = new snoowrap({

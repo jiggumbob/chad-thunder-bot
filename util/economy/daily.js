@@ -1,13 +1,26 @@
+/**
+ * Defines the dailyReward function and reset interval.
+ *
+ * The dailyReward function is used by the daily command to process requests to claim
+ * a user's daily reward. It is in charge of determining whether the requester is actually 
+ * registered and is eligible to claim their daily reward. The reset interval resets everyone
+ * in the database's daily claim eligibility and updates the date tracking timer every 24 hours
+ * in alignment with UTC midnight.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
 var sql_connection = require("../sql-connection.js").sql_connection;
 var fs = require("fs");
 var moment = require("moment");
 const embedTool = require("../embed-message-tool.js");
 
-/* Gives a user their daily reward, if they are eligible to receive one.
-  
-  First checks if they are registered, if not, prompts them to register.
-  Then if they already claimed a reward today, tells them so.
-  Finally allows them to claim their reward.
+/**
+ * Gives a user their daily reward, if they are eligible to receive one.
+ *
+ * First checks if they are registered, if not, prompts them to register.
+ * Then if they already claimed a reward today, tells them so. Finally, allows them to claim their reward.
 */
 exports.dailyReward = function dailyReward(context) {
     let user = context.channel.guild.member(context.author);
@@ -47,8 +60,10 @@ exports.dailyReward = function dailyReward(context) {
 }
 
 
-/* Checks to see if it has been a full day since the last midnight UTC, and if so, resets everyone's ability to claim a daily reward,
-  and changes the day to current UTC.*/
+/**
+ * Checks to see if it has been a full day since the last midnight UTC, and if so, resets everyone's ability to claim a daily reward,
+ * and changes the day to current UTC.
+ */
 setInterval(function resetClaims(){
     let currentTime = moment();
     let fileTime;

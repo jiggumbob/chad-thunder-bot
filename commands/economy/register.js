@@ -1,3 +1,13 @@
+/**
+ * Defines the register command.
+ *
+ * Registers a user into the database. Utilizes the registerUser utility function to 
+ * handle the entire process.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
 var registerUtil = require("../../util/economy/register.js");
 
 exports.run = async (client, message, args) => {

@@ -1,4 +1,15 @@
-const embedTool = require("../util/embed-message-tool.js");
+/**
+ * Defines the clear command.
+ *
+ * Bulk clears a specified number of messages from the channel's chat.
+ * Only users with sufficient permission can use this command.
+ *
+ * @author Jude Markabawi, Stanley Wang.
+ * @license See the LICENSE file for details.
+ */
+
+const embedTool = require("../../util/embed-message-tool.js");
+
 exports.run = async (client, message, args) => {
     if (!message.channel.permissionsFor(message.member).has("MANAGE_MESSAGES")) {
         message.channel.send("Sorry, you don't have the permission to execute the command \"" + message.content + "\"");
