@@ -11,9 +11,6 @@
  */
 
 class GameMeister {
-    /** 
-     * Creates a Game Meister. 
-    */
     constructor() {
         this.games = {}; // channel id to game
     }

@@ -17,10 +17,17 @@ class Bet {
     }
 }
 
- 
+/**
+ * Gets all the possible betting groups that would have been 
+ * a winner for the landed roulette number.
+ *
+ * @param  integer  landedNumber  The number the roulette spin landed on.
+ *
+ * @return  Array  String array of the names of all winning betting groups.
+ */
 async function getWinningBets(landedNumber) {
     let winningBets = [landedNumber];
-        // loop through all possible betting groups and see which ones contain this number
+        // loop through all possible betting groups and add the ones that contain this number to array
         for (let group of betGroups.groupCollections) {
             if (landedNumber in group.values) {
                 winningBets.push(group.name)
