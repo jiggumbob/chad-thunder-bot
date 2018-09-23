@@ -13,24 +13,10 @@ const redditutil = require("../util/reddit/reddit-util.js");
 const embedTool = require("../util/embed-message-tool.js");
 
 exports.run = async (client, message, args) => {
-    let commands = message.content.split(" ");
-    let subcommand = commands[1];
-    let argument = commands[2];
-
-    switch (subcommand) {
-        case "r":
-            redditutil.processRandomCommand(argument, message);
-            break;
-        case "u":
-            redditutil.processUrlCommand(argument, message);
-            break;
-        default:
-            message.channel.send(
-                embedTool.createMessage("Unknown Reddit Subcommand", 
-                                        "Maybe try using the command correctly? \n" + "Use `" + process.env.PREFIX + "help reddit` for info.",
-                                        "question",
-                                        true)
-            );
+    if(args[0].includes("https://")) {
+        redditutil.processUrlCommand(args[0], message);
+    } else {
+        redditutil.processRandomCommand(args[0], message);
     }
 }
 
@@ -43,7 +29,7 @@ exports.conf = {
 
 exports.help = {
     name: "reddit",
-    description: "For ``reddit r [subreddit]``, prints a random post from that subreddit.\n" +
-        "For ``reddit u [reddit post url]``, prints the post at that URL.",
-    usage: "reddit <r/u> <argument>"
+    description: "For ``reddit [subreddit]``, prints a random post from that subreddit.\n" +
+        "For ``reddit [reddit post url]``, prints the post at that URL.",
+    usage: "reddit <argument>"
 };
