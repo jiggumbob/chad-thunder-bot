@@ -11,11 +11,6 @@
 const embedTool = require("../../util/embed-message-tool.js");
 
 exports.run = async (client, message, args) => {
-    if (!message.channel.permissionsFor(message.member).has("MANAGE_MESSAGES")) {
-        message.channel.send("Sorry, you don't have the permission to execute the command \"" + message.content + "\"");
-        return;
-    }
-
     if (isNaN(args[0])) {
         message.channel.send(
             embedTool.createMessage("Invalid Clear Command",
