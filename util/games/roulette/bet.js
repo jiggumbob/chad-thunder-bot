@@ -12,8 +12,24 @@ const betGroups = require("./bet-groups.js");
 
 class Bet {
     constructor() {
-        this.earning = 0; // return off of bets after spinning the wheel (includes initial bets)
-        this.bets = {} // bet category, ex: "00", "evens", to bet cash amount
+        this.payIn = 0; // amount total in bets for the round
+        this.profit = 0; // amount profited from bets, (payOut = payIn + profit)
+        this.bets = {}; // bet category, ex: "0", "evens", to bet cash amount
+    }
+    
+    /**
+     * Adds a certain value bet on a group.
+     *
+     * @param  string   betGroup   The bet group on the roulette table.
+     * @param  integer  betAmount  The amount to be bet on that group.
+     */
+    addBet(betGroup, betAmount) {
+        if(betGroup in this.bets) {
+            this.bets[betGroup] += betAmount;
+        } else {
+            this.bets[betGroup] = betAmount;
+        }
+        this.payIn += betAmount;
     }
 }
 
