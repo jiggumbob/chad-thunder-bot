@@ -15,8 +15,9 @@ const gameMeister = require("../game-meister.js").gameMeister;
 class RouletteGame {
     constructor() {
         this.playerBets = {} // player ID to Bet object
-        this.channelID; // ID of the text channel, used to request deletion at the end of game
-        this.spinning; // boolean - if the roulette wheel is spinning (calculating bets)
+        this.context; // the discord message that started the game
+        this.canBet = false; // boolean - if users are in the betting phase
+        this.canViewResult = false; // boolean - if users are in the end game result phase
     }
   
     /**
@@ -25,7 +26,7 @@ class RouletteGame {
      * @param  Message  context  The discord message of the game start command origin.
      */
     async start(context) {
-        this.channelID = context.channel.id;
+        this.context = context;
         // GREETING MESSAGE
             // etc
         // GET BETS
@@ -37,4 +38,39 @@ class RouletteGame {
         // TELL GAME MEISTER TO DESTROY THE GAME
             // etc
     }
+    
+    /**
+     * Greets users in a channel, introducing them to the Roulette game.
+     */
+    gameStartGreeting() {
+        this.context.channel.send("Welcome to the Roulette Game! Get ready to bet!");
+    }
+    
+    /**
+     * Allows bets to be added for a period of time, then stops it.
+     */
+    async getUserBets() {
+        this.canBet = true;
+        
+    }
+    
+    /**
+     * Adds the bet of a user to the bets list.
+     *
+     * @param  String   userID    ID of the user adding a bet.
+     * @param  String   betGroup  Type of roulette bet the user is betting on.
+     * @param  integer  amount    Amount of money betting on that group.
+     *
+     * @return  boolean  If the bet was successfully added or not.
+     */
+    async addBet(userID, betGroup, amount) {
+        if (!this.canBet) {
+            return false;
+        }
+        
+        // check user funds
+        // add the bet
+        return true;
+    }
+    
 }
