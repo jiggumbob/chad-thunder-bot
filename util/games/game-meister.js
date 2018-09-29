@@ -27,12 +27,12 @@ class GameMeister {
      *
      * @return  boolean  Whether the game request was successful.
     */
-    requestGame(game, channel_id) {
+    async requestGame(game, channel_id) {
         if (channel_id in this.games) {
             return false;
         } else {
             this.games[channel_id] = game;
-            game.start();
+            game.start(channel_id);
             return true;
         }
     }
