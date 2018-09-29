@@ -23,16 +23,17 @@ class GameMeister {
      * Returns false and does not create game if the channel already has a game.
      *
      * @param  Game    game        The type of game desired to be started.
-     * @param  String  channel_id  The id of the channel the game request was made.
+     * @param  Mesage  context     The discord message of the game start command origin.
      *
      * @return  boolean  Whether the game request was successful.
     */
-    async requestGame(game, channel_id) {
+    async requestGame(game, context) {
+        let channel_id = context.channel.id;
         if (channel_id in this.games) {
             return false;
         } else {
             this.games[channel_id] = game;
-            game.start(channel_id);
+            game.start(context);
             return true;
         }
     }

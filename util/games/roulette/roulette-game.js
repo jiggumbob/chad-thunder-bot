@@ -15,17 +15,17 @@ const gameMeister = require("../game-meister.js").gameMeister;
 class RouletteGame {
     constructor() {
         this.playerBets = {} // player ID to Bet object
-        this.channelID; // ID of the text channel
+        this.channelID; // ID of the text channel, used to request deletion at the end of game
         this.spinning; // boolean - if the roulette wheel is spinning (calculating bets)
     }
   
     /**
      * Starts a roulette game and runs the lifetime of the game.
      *
-     * @param  string  channelID  The ID of the channel that the game will run in.
+     * @param  Message  context  The discord message of the game start command origin.
      */
-    start(channelID) {
-        this.channelID = channelID;
+    async start(context) {
+        this.channelID = context.channel.id;
         // GREETING MESSAGE
             // etc
         // GET BETS
