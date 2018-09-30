@@ -11,6 +11,7 @@
  */
 
 const gameMeister = require("../game-meister.js").gameMeister;
+const betUtil = require("./bet.js");
 
 class RouletteGame {
     constructor() {
@@ -28,9 +29,9 @@ class RouletteGame {
     async start(context) {
         this.context = context;
         // GREETING MESSAGE
-            // etc
+            this.gameStartGreeting();
         // GET BETS
-            // etc
+            await this.getUserBets();
         // SPIN WHEEL (CALCULATE BET EARNINGS)
             // etc
         // GIVE TIME TO SEE EARNINGS
@@ -43,7 +44,8 @@ class RouletteGame {
      * Greets users in a channel, introducing them to the Roulette game.
      */
     gameStartGreeting() {
-        this.context.channel.send("Welcome to the Roulette Game! Get ready to bet!");
+        this.context.channel.send("*welcome message*");
+        this.context.channel.send("*picture of the betting table*");
     }
     
     /**
@@ -51,26 +53,48 @@ class RouletteGame {
      */
     async getUserBets() {
         this.canBet = true;
-        
+        setTimeout(function() {
+            this.canBet = false;
+        }, 15000);
     }
     
     /**
+     * Handles all the aspects of spinning the roulette wheel.
+     *
+     * Includes displaying the spinning animation, picking the random
+     * landed number, calculating the winning bets, calculating users'
+     * earnings after betting, and displaying the image of the landed number.
+     */
+    async spin() {
+        this.spinWheelAnimation();
+        let landedNumber = Math.floor(Math.random() * 37);
+        let winningBets = betUtil.getWinningBets(landedNumber);
+        for (let player of Object.keys(this.playerBets)) {
+            this.playerBets[player].calculatePayOut();
+        }
+    }
+  
+    /**
      * Adds the bet of a user to the bets list.
      *
-     * @param  String   userID    ID of the user adding a bet.
-     * @param  String   betGroup  Type of roulette bet the user is betting on.
-     * @param  integer  amount    Amount of money betting on that group.
+     * Assumes that the user already has sufficient funds and payed for
+     * the bet to be placed.
+     *
+     * @param  String   userID     ID of the user adding a bet.
+     * @param  String   betGroup   Type of roulette bet the user is betting on.
+     * @param  integer  betAmount  Amount of money betting on that group.
      *
      * @return  boolean  If the bet was successfully added or not.
      */
-    async addBet(userID, betGroup, amount) {
+    async addBet(userID, betGroup, betAmount) {
         if (!this.canBet) {
             return false;
         }
-        
-        // check user funds
         // add the bet
+        if (!(userID in this.playerBets)) {
+            this.playerBets[userID] = new betUtil.Bet();
+        }
+        this.playerBets[userID].addBet(betGroup, betAmount);
         return true;
     }
-    
 }

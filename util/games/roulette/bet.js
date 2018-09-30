@@ -59,7 +59,7 @@ class Bet {
  *
  * @return  Array  String array of the names of all winning betting groups.
  */
-async function getWinningBets(landedNumber) {
+exports.getWinningBets = async function getWinningBets(landedNumber) {
     // add the group of just betting on the number itself
     let winningBets = [{
         name: landedNumber.toString(),
