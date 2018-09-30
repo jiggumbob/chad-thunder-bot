@@ -13,31 +13,32 @@
 const gameMeister = require("../game-meister.js").gameMeister;
 const betUtil = require("./bet.js");
 
+const betTime = 15000;
+const resultTime = 15000;
+
 class RouletteGame {
-    constructor() {
+    constructor(context) {
         this.playerBets = {} // player ID to Bet object
-        this.context; // the discord message that started the game
+        this.context = context; // the discord message that started the game
         this.canBet = false; // boolean - if users are in the betting phase
-        this.canViewResult = false; // boolean - if users are in the end game result phase
+        this.canViewResults = false; // boolean - if users are in the end game result phase
     }
   
     /**
      * Starts a roulette game and runs the lifetime of the game.
      *
-     * @param  Message  context  The discord message of the game start command origin.
+     * Greets users and displays a betting table and options, allows users
+     * to make their bets, spins the wheel (calculating the results while spinning),
+     * then gives time for users to view their earnings/losses before terminating.
      */
-    async start(context) {
-        this.context = context;
-        // GREETING MESSAGE
-            this.gameStartGreeting();
-        // GET BETS
-            await this.getUserBets();
-        // SPIN WHEEL (CALCULATE BET EARNINGS)
-            // etc
-        // GIVE TIME TO SEE EARNINGS
-            // etc
-        // TELL GAME MEISTER TO DESTROY THE GAME
-            // etc
+    async start() {
+        this.gameStartGreeting();
+        this.getUserBets();
+        this.spin();
+        this.canViewResults = true;
+        setTimeout(function() {
+            gameMeister.requestDeath(this.context.channel.id);
+        }, resultTime);
     }
     
     /**
@@ -51,11 +52,11 @@ class RouletteGame {
     /**
      * Allows bets to be added for a period of time, then stops it.
      */
-    async getUserBets() {
+    getUserBets() {
         this.canBet = true;
         setTimeout(function() {
             this.canBet = false;
-        }, 15000);
+        }, betTime);
     }
     
     /**
@@ -66,14 +67,17 @@ class RouletteGame {
      * earnings after betting, and displaying the image of the landed number.
      */
     async spin() {
-        this.spinWheelAnimation();
+        let message = await this.context.channel.send("spinning gif");
+      
         let landedNumber = Math.floor(Math.random() * 37);
         let winningBets = betUtil.getWinningBets(landedNumber);
         for (let player of Object.keys(this.playerBets)) {
             this.playerBets[player].calculatePayOut();
         }
+        
+        message.edit("image of a stationary roulette wheel with a ball on one");
     }
-  
+    
     /**
      * Adds the bet of a user to the bets list.
      *
@@ -90,7 +94,7 @@ class RouletteGame {
         if (!this.canBet) {
             return false;
         }
-        // add the bet
+      
         if (!(userID in this.playerBets)) {
             this.playerBets[userID] = new betUtil.Bet();
         }

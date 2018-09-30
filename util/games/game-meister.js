@@ -23,18 +23,28 @@ class GameMeister {
      * Returns false and does not create game if the channel already has a game.
      *
      * @param  Game    game        The type of game desired to be started.
-     * @param  Mesage  context     The discord message of the game start command origin.
      *
      * @return  boolean  Whether the game request was successful.
     */
-    async requestGame(game, context) {
-        let channel_id = context.channel.id;
-        if (channel_id in this.games) {
+    async requestGame(game) {
+        let channelID = game.context.channel.id;
+        if (channelID in this.games) {
             return false;
         } else {
-            this.games[channel_id] = game;
-            game.start(context);
+            this.games[channelID] = game;
+            game.start();
             return true;
+        }
+    }
+    
+    /**
+     * Deletes a Game from the Meister.
+     *
+     * @param  String  channelID  Channel ID of the game to be destroyed.
+    */
+    async requestDeath(channelID) {
+        if (channelID in this.games) {
+            delete this.games[channelID];
         }
     }
 }
