@@ -20,6 +20,6 @@ exports.conf = {
 
 exports.help = {
     name: "roulette",
-    description: "Yeet on everyone while you spin the wheel of mythicality.", 
-    usage: "roulette <Chad Bucks>" 
+    description: "Roulette commands. Use " + process.env.PREFIX + " roulette help for info.", 
+    usage: "roulette <bet/view/help> <bet group> <amount>" 
 };

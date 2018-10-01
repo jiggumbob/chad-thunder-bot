@@ -22,13 +22,13 @@ class GameMeister {
      * of the specified type in that channel, starts it, and return true.
      * Returns false and does not create game if the channel already has a game.
      *
-     * @param  Game    game        The type of game desired to be started.
+     * @param  Game  game  The type of game desired to be started.
      *
      * @return  boolean  Whether the game request was successful.
-    */
+     */
     async requestGame(game) {
         let channelID = game.context.channel.id;
-        if (channelID in this.games) {
+        if (this.hasGame(channelID)) {
             return false;
         } else {
             this.games[channelID] = game;
@@ -41,10 +41,23 @@ class GameMeister {
      * Deletes a Game from the Meister.
      *
      * @param  String  channelID  Channel ID of the game to be destroyed.
-    */
+     */
     async requestDeath(channelID) {
         if (channelID in this.games) {
             delete this.games[channelID];
+        }
+    }
+    
+    /**
+     * Checks if there is a game running in the specified channel.
+     *
+     * @param  String  channelID  The type of game desired to be started.
+     *
+     * @return  boolean  If there is a game in the channel.
+     */
+    async hasGame(channelID) {
+        if (channelID in this.games) {
+            return true;
         }
     }
 }
