@@ -12,6 +12,7 @@
 
 const gameMeister = require("../game-meister.js").gameMeister;
 const betUtil = require("./bet.js");
+const userInterface = require("./user-interface.js");
 
 const betTime = 15000;
 const resultTime = 15000;

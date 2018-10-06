@@ -2,6 +2,8 @@
  * Defines the roulette command.
  *
  * Handles roulette game related functionality.
+ * Interacts with the Roulette User Interface only, never directly
+ * accesses the Roulette Game or Game Meister.
  *
  * @author Jude Markabawi, Stanley Wang.
  * @license See the LICENSE file for details.
