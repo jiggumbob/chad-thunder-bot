@@ -63,16 +63,6 @@ exports.addBet = async function addBet(context, args) {
     }
   
     // make sure they have enough money and add their bet
-    checkMoneyAndPlaceBet(context, args);
-}
-
-/**
- * Checks user's ability to place a bet, then places the bet.
- *
- * @param  Message  context  The Discord command that initiated the game start.
- * @param  Array    args     Array of arguments the user made in the bot commmand.
- */
-async function checkMoneyAndPlaceBet(context, args) {
     let user = context.channel.guild.member(context.author);
     sql_connection.query("SELECT chad_bucks FROM UserInfo WHERE user_id = " + user.id, function(error, results, fields) {
         // check if the user is registered
@@ -90,7 +80,6 @@ async function checkMoneyAndPlaceBet(context, args) {
         // process payment and submit to roulette game
         sql_connection.query("UPDATE UserInfo SET chad_bucks = " + currentBalance - betAmount + 
                              " WHERE user_id = " + user.id, function(error, results, fields) {});
-        let rouletteGame = gameMeister.games[context.channel.id];
         rouletteGame.addBet(user.id, args[1], betAmount);
     });
 }
