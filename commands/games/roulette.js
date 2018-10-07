@@ -9,8 +9,20 @@
  * @license See the LICENSE file for details.
  */
 
+var rouletteUI = require("../../util/games/roulette/user-interface.js");
 exports.run = async (client, message, args) => {
-  
+    switch (args[2]) {
+        case "start":
+            break;
+        case "bet":
+            break;
+        case "view":
+            break;
+        case "help":
+            break;
+        default:
+            break;
+    }
 }
 
 exports.conf = {
