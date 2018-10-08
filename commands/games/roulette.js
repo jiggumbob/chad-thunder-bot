@@ -10,6 +10,7 @@
  */
 
 var rouletteUI = require("../../util/games/roulette/user-interface.js");
+
 exports.run = async (client, message, args) => {
     switch (args[0]) {
         case "start":
@@ -25,7 +26,9 @@ exports.run = async (client, message, args) => {
             message.channel.send("coming soon - help");
             break;
         default:
-            message.channel.send("Unknown roulette subcommand");
+            let errorMessage = rouletteUI.createErrorMessage("Invalid reddit subcommand! Use `" + process.env.PREFIX + 
+                                                           "roulette help` for more info.");
+            message.channel.send(errorMessage);
             break;
     }
 }

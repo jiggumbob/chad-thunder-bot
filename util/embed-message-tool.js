@@ -45,5 +45,6 @@ const emojis = {
     "smiling sunglasses" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/smiling-face-with-sunglasses_1f60e.png",
     "fearful face" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/fearful-face_1f628.png",
     "pensive" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/pensive-face_1f614.png",
-    "smiling face" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/smiling-face-with-open-mouth-and-smiling-eyes_1f604.png"
+    "smiling face" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/smiling-face-with-open-mouth-and-smiling-eyes_1f604.png",
+    "exclamation mark": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/double-exclamation-mark_203c.png"
 };

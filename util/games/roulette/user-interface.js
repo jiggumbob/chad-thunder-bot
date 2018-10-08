@@ -14,6 +14,11 @@ const userInterface = require("./user-interface.js");
 const embedUtil = require("../../embed-message-tool.js");
 const imageLinks = require("../../../assets/games/roulette/image-links.js");
 
+const betTime = 30000;
+exports.betTime = betTime;
+const resultTime = 20000;
+exports.resultTime = resultTime;
+
 /**
  * Handles user requests to start a Roulette game.
  *
@@ -25,7 +30,8 @@ const imageLinks = require("../../../assets/games/roulette/image-links.js");
 exports.startGame = async function startGame(context) {
     let newGame = new RouletteGame(context);
     if (!(await gameMeister.requestGame(newGame))) {
-        context.channel.send("There is already a different game in this channel.");
+        let errorMessage = userInterface.createErrorMessage("There is already a different game in this channel.");
+        context.channel.send(errorMessage);
     }
 }
 
@@ -44,13 +50,17 @@ exports.startGame = async function startGame(context) {
 exports.addBet = async function addBet(context, args) {
     // make sure the command is valid
     if (typeof args[1] == "undefined" || typeof args[2] == "undefined") {
-        context.channel.send("Invalid bet command!");
+        let errorMessage = userInterface.createErrorMessage("You need to specify what you're betting on " + 
+                                                           "and how much on it! Use `" + process.env.PREFIX + 
+                                                           "roulette help` for more info.");
+        context.channel.send(errorMessage);
         return;
     }
     // make sure there is a roulette game running in the current channel
     if (!(context.channel.id in gameMeister.games) ||
         !(gameMeister.games[context.channel.id] instanceof RouletteGame)) {
-        context.channel.send("Please start a Roulette game before placing a bet.");
+        let errorMessage = userInterface.createErrorMessage("Please start a Roulette game before placing a bet.");
+        context.channel.send(errorMessage);
         return;
     }
     
@@ -58,7 +68,8 @@ exports.addBet = async function addBet(context, args) {
   
     // make sure it's betting time
     if (!rouletteGame.canBet) {
-        context.channel.send("Now is not the time for betting.");
+        let errorMessage = userInterface.createErrorMessage("You can't bet right now, betting is over.");
+        context.channel.send(errorMessage);
         return;
     }
   
@@ -67,7 +78,9 @@ exports.addBet = async function addBet(context, args) {
     let isRealBetGroup = names.includes(args[1].toLowerCase());
     let isRealBetNumber = (Number(args[1]) >= 0) && (Number(args[1]) <= 36);
     if (!isRealBetGroup && !isRealBetNumber) {
-        context.channel.send("That betting category doesn't exist.");
+        let errorMessage = userInterface.createErrorMessage("That betting group doesn't exist! Use `" + process.env.PREFIX + 
+                                                           "roulette help` for more info.");
+        context.channel.send(errorMessage);
         return;
     }
   
@@ -75,14 +88,16 @@ exports.addBet = async function addBet(context, args) {
     sql_connection.query("SELECT chad_bucks FROM UserInfo WHERE user_id = " + user.id, function(error, results, fields) {
         // check if the user is registered
         if(results.length == 0) {
-            context.channel.send("You are not registered, please register to play.");
+            let errorMessage = userInterface.createErrorMessage("You are not registered, please register to play.");
+            context.channel.send(errorMessage);
             return;
         }
         // check if user has sufficient funds
         let currentBalance = results[0].chad_bucks;
         let betAmount = parseInt(args[2]);
         if(currentBalance < betAmount) {
-            context.channel.send("You do not have enough money to make that bet.");
+            let errorMessage = userInterface.createErrorMessage("You don't have enough money to make that bet.");
+            context.channel.send(errorMessage);
             return;
         }
         // process payment and submit to roulette game
@@ -107,7 +122,8 @@ exports.viewResults = async function viewResults(context) {
     // make sure there is a roulette game running in the current channel
     if (!(context.channel.id in gameMeister.games) ||
         !(gameMeister.games[context.channel.id] instanceof RouletteGame)) {
-        context.channel.send("Please start a Roulette game before trying to view results.");
+        let errorMessage = userInterface.createErrorMessage("Start a Roulette game before trying to view results.");
+        context.channel.send(errorMessage);
         return;
     }
     
@@ -115,14 +131,16 @@ exports.viewResults = async function viewResults(context) {
   
     // make sure it's viewing time
     if (!rouletteGame.canViewResults) {
-        context.channel.send("You cannot view betting results yet.");
+        let errorMessage = userInterface.createErrorMessage("You can't view betting results yet.");
+        context.channel.send(errorMessage);
         return;
     }
     let user = context.channel.guild.member(context.author);
   
     // make sure user actually betted in the game
     if(!(user.id in rouletteGame.playerBets)) {
-        context.channel.send("You didn't participate in this game.");
+        let errorMessage = userInterface.createErrorMessage("You didn't participate in this game.");
+        context.channel.send(errorMessage);
         return;
     }
     
@@ -131,8 +149,18 @@ exports.viewResults = async function viewResults(context) {
     let payIn = userBet.payIn;
     let payOut = userBet.payOut;
     let profit = payOut - payIn;
-    context.channel.send("you spent " + payIn + ", were payed " + payOut + ", so " +
-                         "in total, your profit is " + profit);
+    
+    let profitMessage = "Your total winnings are: ";
+    let profitEmoji = "money with wings";
+    if (profit <= 0) {
+        profitMessage = "Your total losses are: ";
+        profitEmoji = "crying face";
+    }
+    let description = "You spent: " + payIn + "\nYou were payed: " + payOut + "\n\n**" + profitMessage +
+                      profit + " Chad Bucks**";
+    let resultMessage = embedUtil.createMessage("Bet Results", description, profitEmoji, false);
+    resultMessage.setAuthor(user.displayName, user.user.displayAvatarURL);
+    context.channel.send(resultMessage);
 }
 
 /**
@@ -155,14 +183,12 @@ exports.payOutUsers = async function payOutUsers(context) {
  * @param  Message  context  The Discord command that initiated the game start.
  */
 exports.gameStartGreeting = async function gameStartGreeting(context) {
-    let welcomeDescription = "Thanks for starting a game of Roulette! You have 20 seconds to place any " +
+    let welcomeDescription = "You have **" + userInterface.betTime/1000 + " seconds** to place any " +
         "bets you like.\n\nUse `" + process.env.PREFIX + "roulette help` for info about betting and how to play Roulette.";
     let welcomeMessage = embedUtil.createMessage("Welcome to Roulette!", welcomeDescription, "smiling face", false);
-    let betTableDescription = "Use " + process.env.PREFIX + "roulette bet to bet";
-    let betTableMessage = embedUtil.createMessage("Betting Table", betTableDescription, undefined, false); 
-    betTableMessage.setImage(imageLinks.betTable);
+    welcomeMessage.addField("Betting Table", "Start betting!");
+    welcomeMessage.setImage(imageLinks.betTable);
     context.channel.send(welcomeMessage);
-    context.channel.send(betTableMessage);
 }
 
 /**
@@ -172,9 +198,13 @@ exports.gameStartGreeting = async function gameStartGreeting(context) {
  * @param  Integer  landedNumber  The number landed on by the roulette wheel after spinning.
  */
 exports.spinAnimations = async function spinAnimations(context, landedNumber) {
-    let message = await context.channel.send("Spinning Wheel...");
+    let wheel = embedUtil.createMessage(undefined, undefined, undefined, false);
+    wheel.setImage(imageLinks.spinningWheel);
+    let message = await context.channel.send(wheel);
     setTimeout(function() {
-        message.edit("Landed on " + landedNumber + ".");
+        wheel.setImage(imageLinks.stillWheel);
+        wheel.setTitle("Landed on " + landedNumber);
+        message.edit(wheel);
     }, 3000);
 }
 
@@ -184,8 +214,10 @@ exports.spinAnimations = async function spinAnimations(context, landedNumber) {
  * @param  Message  context  The Discord command that initiated the game start.
  */
 exports.viewResultsPrompt = async function viewResultsPrompt(context) {
-    context.channel.send("Once the wheel stops spinning, use `" + process.env.PREFIX + "roulette view` to see " +
-                        "your results.");
+    let description = "Once the wheel stops spinning, use `" + process.env.PREFIX + "roulette view` to see " +
+                        "your betting results!";
+    let resultsPrompt = embedUtil.createMessage("Get Ready to View Results", description, "exclamation mark", false);
+    context.channel.send(resultsPrompt);
 }
 
 /**
@@ -194,8 +226,10 @@ exports.viewResultsPrompt = async function viewResultsPrompt(context) {
  * @param  Message  context  The Discord command that initiated the game start.
  */
 exports.endOfGameMessage = async function endOfGameMessage(context) {
-    context.channel.send("Thank you for playing Roulette! You can easily start another " +
-                        "game by using `" + process.env.PREFIX + "roulette start`");                       
+    let description = "Thank you for playing Roulette!\n\nYou can easily start another " +
+                        "game by using `" + process.env.PREFIX + "roulette start`";
+    let endMessage = embedUtil.createMessage("End of Roulette Game", description, "smiling face", false);
+    context.channel.send(endMessage);
 }
 
 /**
@@ -207,6 +241,18 @@ exports.endOfGameMessage = async function endOfGameMessage(context) {
  */
 exports.betAddedMessage = async function betAddedMessage(context, betGroup, betAmount) {
     let user = context.channel.guild.member(context.author);
-    context.channel.send(user.displayName + ", your bet of " + betAmount + " Chad Bucks on " + 
-                        betGroup + " has been added. Good luck!");
+    let description = "Your bet of " + betAmount + " Chad Bucks on `" + 
+                        betGroup + "` has been added. Good luck!";
+    let embedMessage = embedUtil.createMessage("Roulette Bet Added", description, undefined, false);
+    embedMessage.setAuthor(user.displayName, user.user.displayAvatarURL);
+    context.channel.send(embedMessage);
+}
+
+/**
+ * Provides a unified system for creating roulette errors.
+ *
+ * @param  String  description  What the error message will say.
+ */
+exports.createErrorMessage = function createErrorMessage(description) {
+    return embedUtil.createMessage("Roulette Error", description, undefined, true);
 }

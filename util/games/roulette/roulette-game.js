@@ -14,9 +14,6 @@ const gameMeister = require("../game-meister.js").gameMeister;
 const betUtil = require("./bet.js");
 const userInterface = require("./user-interface.js");
 
-const betTime = 20000;
-const resultTime = 10000;
-
 exports.RouletteGame = class RouletteGame {
     constructor(context) {
         this.playerBets = {} // player ID to Bet object
@@ -42,26 +39,16 @@ exports.RouletteGame = class RouletteGame {
         setTimeout(async function() {
             self.canBet = false;
             
-            await self.spin();
+            self.spin();
             
             // wait for users to view results then terminate
-            await userInterface.viewResultsPrompt(self.context);
+            userInterface.viewResultsPrompt(self.context);
             self.canViewResults = true;
             setTimeout(function() {
                 userInterface.endOfGameMessage(self.context);
                 gameMeister.requestDeath(self.context.channel.id);
-            }, resultTime);
-        }, betTime);
-    }
-    
-    /**
-     * Allows bets to be added for a period of time, then stops it.
-     */
-    async getUserBets() {
-        this.canBet = true;
-        setTimeout(function() {
-            this.canBet = false;
-        }, betTime);
+            }, userInterface.resultTime);
+        }, userInterface.betTime);
     }
     
     /**
