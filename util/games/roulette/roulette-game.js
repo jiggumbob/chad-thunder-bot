@@ -15,7 +15,7 @@ const betUtil = require("./bet.js");
 const userInterface = require("./user-interface.js");
 
 const betTime = 20000;
-const resultTime = 20000;
+const resultTime = 10000;
 
 exports.RouletteGame = class RouletteGame {
     constructor(context) {

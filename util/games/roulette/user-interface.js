@@ -12,6 +12,7 @@ const sql_connection = require("../../sql-connection.js").sql_connection;
 const betGroups = require("./bet-groups.js").groupCollections;
 const userInterface = require("./user-interface.js");
 const embedUtil = require("../../embed-message-tool.js");
+const imageLinks = require("../../../assets/games/roulette/image-links.js");
 
 /**
  * Handles user requests to start a Roulette game.
@@ -41,6 +42,11 @@ exports.startGame = async function startGame(context) {
  * @param  Array    args     Array of arguments the user made in the bot commmand.
  */
 exports.addBet = async function addBet(context, args) {
+    // make sure the command is valid
+    if (typeof args[1] == "undefined" || typeof args[2] == "undefined") {
+        context.channel.send("Invalid bet command!");
+        return;
+    }
     // make sure there is a roulette game running in the current channel
     if (!(context.channel.id in gameMeister.games) ||
         !(gameMeister.games[context.channel.id] instanceof RouletteGame)) {
@@ -149,7 +155,14 @@ exports.payOutUsers = async function payOutUsers(context) {
  * @param  Message  context  The Discord command that initiated the game start.
  */
 exports.gameStartGreeting = async function gameStartGreeting(context) {
-    context.channel.send("Welcome to Roulette! You have 20 seconds to bet. Go!");
+    let welcomeDescription = "Thanks for starting a game of Roulette! You have 20 seconds to place any " +
+        "bets you like.\n\nUse `" + process.env.PREFIX + "roulette help` for info about betting and how to play Roulette.";
+    let welcomeMessage = embedUtil.createMessage("Welcome to Roulette!", welcomeDescription, "smiling face", false);
+    let betTableDescription = "Use " + process.env.PREFIX + "roulette bet to bet";
+    let betTableMessage = embedUtil.createMessage("Betting Table", betTableDescription, undefined, false); 
+    betTableMessage.setImage(imageLinks.betTable);
+    context.channel.send(welcomeMessage);
+    context.channel.send(betTableMessage);
 }
 
 /**
