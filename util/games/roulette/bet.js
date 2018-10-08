@@ -40,6 +40,7 @@ exports.Bet = class Bet {
      */
     calculatePayOut(winningBets) {
         let payOut = 0;
+        console.log(winningBets);
         for (let betGroup of Object.keys(this.bets)) {
             for (let winGroup of winningBets) {
                 if (betGroup == winGroup.name) {
@@ -67,7 +68,7 @@ exports.getWinningBets = async function getWinningBets(landedNumber) {
     }];
     // loop through all possible betting groups and add the ones that contain this number to array
     for (let group of betGroups.groupCollections) {
-        if (landedNumber in group.values) {
+        if (group.values.includes(landedNumber)) {
             winningBets.push(group);
         }
     }

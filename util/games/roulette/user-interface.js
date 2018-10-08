@@ -56,8 +56,6 @@ exports.addBet = async function addBet(context, args) {
   
     // make sure the user's betting group actually exists
     let names = betGroups.map(group => group.name);
-    console.log(names);
-    console.log(args[1].toLowerCase());
     let isRealBetGroup = names.includes(args[1].toLowerCase());
     let isRealBetNumber = (Number(args[1]) >= 0) && (Number(args[1]) <= 36);
     if (!isRealBetGroup && !isRealBetNumber) {
