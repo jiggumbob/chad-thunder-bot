@@ -157,7 +157,7 @@ exports.viewResults = async function viewResults(context) {
         profitEmoji = "crying face";
     }
     let description = "You spent: " + payIn + "\nYou were payed: " + payOut + "\n\n**" + profitMessage +
-                      profit + " Chad Bucks**";
+                      Math.abs(profit) + " Chad Bucks**";
     let resultMessage = embedUtil.createMessage("Bet Results", description, profitEmoji, false);
     resultMessage.setAuthor(user.displayName, user.user.displayAvatarURL);
     context.channel.send(resultMessage);
