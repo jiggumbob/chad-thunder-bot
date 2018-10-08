@@ -40,7 +40,6 @@ exports.Bet = class Bet {
      */
     calculatePayOut(winningBets) {
         let payOut = 0;
-        console.log(winningBets);
         for (let betGroup of Object.keys(this.bets)) {
             for (let winGroup of winningBets) {
                 if (betGroup == winGroup.name) {

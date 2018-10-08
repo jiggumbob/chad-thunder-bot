@@ -1,6 +1,6 @@
 /**
  * Defines methods and utilities used to allow interact with 
- * an active Roulette Game.
+ * a Roulette Game.
  *
  * @author Jude Markabawi, Stanley Wang.
  * @license See the LICENSE file for details.
@@ -10,6 +10,8 @@ const gameMeister = require("../game-meister.js").gameMeister;
 const RouletteGame = require("./roulette-game.js").RouletteGame;
 const sql_connection = require("../../sql-connection.js").sql_connection;
 const betGroups = require("./bet-groups.js").groupCollections;
+const userInterface = require("./user-interface.js");
+const embedUtil = require("../../embed-message-tool.js");
 
 /**
  * Handles user requests to start a Roulette game.
@@ -35,7 +37,7 @@ exports.startGame = async function startGame(context) {
  *     (3) the user has sufficient funds to make the bet
  * then removes the funds from the user and adds it as bet.
  *
- * @param  Message  context  The Discord command that initiated the game start.
+ * @param  Message  context  The Discord command that asked to place a bet.
  * @param  Array    args     Array of arguments the user made in the bot commmand.
  */
 exports.addBet = async function addBet(context, args) {
@@ -63,7 +65,6 @@ exports.addBet = async function addBet(context, args) {
         return;
     }
   
-    // make sure they have enough money and then add their bet
     let user = context.channel.guild.member(context.author);
     sql_connection.query("SELECT chad_bucks FROM UserInfo WHERE user_id = " + user.id, function(error, results, fields) {
         // check if the user is registered
@@ -82,6 +83,7 @@ exports.addBet = async function addBet(context, args) {
         sql_connection.query("UPDATE UserInfo SET chad_bucks = " + (currentBalance - betAmount) + 
                              " WHERE user_id = " + user.id, function(error, results, fields) {});
         rouletteGame.addBet(user.id, args[1], betAmount);
+        userInterface.betAddedMessage(context, args[1], betAmount);
     });
 }
 
@@ -93,7 +95,7 @@ exports.addBet = async function addBet(context, args) {
  *     (2) the user bet in the game
  * then displays the pay in, pay out, and profit/loss of the Roulette game.
  *
- * @param  Message  context  The Discord command that initiated the game start.
+ * @param  Message  context  The Discord command that asked to view results.
  */
 exports.viewResults = async function viewResults(context) {
     // make sure there is a roulette game running in the current channel
@@ -125,4 +127,73 @@ exports.viewResults = async function viewResults(context) {
     let profit = payOut - payIn;
     context.channel.send("you spent " + payIn + ", were payed " + payOut + ", so " +
                          "in total, your profit is " + profit);
+}
+
+/**
+ * Pays out users after the Roulette wheel has spun.
+ *
+ * @param  Message  context  The Discord command that initiated the game start.
+ */
+exports.payOutUsers = async function payOutUsers(context) {
+    let rouletteGame = gameMeister.games[context.channel.id];
+    for (let userID of Object.keys(rouletteGame.playerBets)) {
+        let bet = rouletteGame.playerBets[userID];
+        sql_connection.query("UPDATE UserInfo SET chad_bucks = chad_bucks + " + bet.payOut + 
+                             " WHERE user_id = " + userID, function(error, results, fields) {});
+    }
+}
+
+/**
+ * Greets users at the start of a Roulette Game
+ *
+ * @param  Message  context  The Discord command that initiated the game start.
+ */
+exports.gameStartGreeting = async function gameStartGreeting(context) {
+    context.channel.send("Welcome to Roulette! You have 20 seconds to bet. Go!");
+}
+
+/**
+ * Displays roulette wheel spinning animation, final roulette wheel image, and landed number.
+ *
+ * @param  Message  context       The Discord command that initiated the game start.
+ * @param  Integer  landedNumber  The number landed on by the roulette wheel after spinning.
+ */
+exports.spinAnimations = async function spinAnimations(context, landedNumber) {
+    let message = await context.channel.send("Spinning Wheel...");
+    setTimeout(function() {
+        message.edit("Landed on " + landedNumber + ".");
+    }, 3000);
+}
+
+/**
+ * Prompts users that now is the time to view their betting results.
+ *
+ * @param  Message  context  The Discord command that initiated the game start.
+ */
+exports.viewResultsPrompt = async function viewResultsPrompt(context) {
+    context.channel.send("Once the wheel stops spinning, use `" + process.env.PREFIX + "roulette view` to see " +
+                        "your results.");
+}
+
+/**
+ * Gives users the end game message before the Roulette game ends.
+ *
+ * @param  Message  context  The Discord command that initiated the game start.
+ */
+exports.endOfGameMessage = async function endOfGameMessage(context) {
+    context.channel.send("Thank you for playing Roulette! You can easily start another " +
+                        "game by using `" + process.env.PREFIX + "roulette start`");                       
+}
+
+/**
+ * Gives users the end game message before the Roulette game ends.
+ *
+ * @param  Message  context    The Discord command that added a bet.
+ * @param  String   betGroup   What the user betted on.
+ * @param  Integer  betAmount  How much the user bet on that.
+ */
+exports.betAddedMessage = async function betAddedMessage(context, betGroup, betAmount) {
+    let user = context.channel.guild.member(context.author);
+    context.channel.send(user.displayName + ", your bet of " + betAmount + " Chad Bucks on " + 
+                        betGroup + " has been added. Good luck!");
 }

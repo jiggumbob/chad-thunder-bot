@@ -14,8 +14,8 @@ const gameMeister = require("../game-meister.js").gameMeister;
 const betUtil = require("./bet.js");
 const userInterface = require("./user-interface.js");
 
-const betTime = 15000;
-const resultTime = 15000;
+const betTime = 20000;
+const resultTime = 20000;
 
 exports.RouletteGame = class RouletteGame {
     constructor(context) {
@@ -34,31 +34,24 @@ exports.RouletteGame = class RouletteGame {
      */
     async start() {
         let self = this; // this doesn't refer to the object anymore in the setTimeouts
-        this.gameStartGreeting();
+      
+        userInterface.gameStartGreeting(this.context);
       
         // get user bets
         this.canBet = true;
-        setTimeout(function() {
+        setTimeout(async function() {
             self.canBet = false;
             
-            self.spin();
+            await self.spin();
             
             // wait for users to view results then terminate
-            self.context.channel.send("Use view to view results");
+            await userInterface.viewResultsPrompt(self.context);
             self.canViewResults = true;
             setTimeout(function() {
-                self.context.channel.send("End of game.");
+                userInterface.endOfGameMessage(self.context);
                 gameMeister.requestDeath(self.context.channel.id);
             }, resultTime);
         }, betTime);
-    }
-    
-    /**
-     * Greets users in a channel, introducing them to the Roulette game.
-     */
-    gameStartGreeting() {
-        this.context.channel.send("*welcome message*");
-        this.context.channel.send("*picture of the betting table*");
     }
     
     /**
@@ -75,27 +68,24 @@ exports.RouletteGame = class RouletteGame {
      * Handles all the aspects of spinning the roulette wheel.
      *
      * Includes displaying the spinning animation, picking the random
-     * landed number, calculating the winning bets, calculating users'
+     * landed number, calculating the winning bets, paying users, calculating users'
      * earnings after betting, and displaying the image of the landed number.
      */
     async spin() {
-        let message = await this.context.channel.send("spinning gif");
-      
         let landedNumber = Math.floor(Math.random() * 37);
         let winningBets = await betUtil.getWinningBets(landedNumber);
         for (let player of Object.keys(this.playerBets)) {
             this.playerBets[player].calculatePayOut(winningBets);
         }
-        
-        message.edit("image of a stationary roulette wheel with a ball on one");
-        this.context.channel.send("Landed on " + landedNumber);
+        userInterface.payOutUsers(this.context);
+        userInterface.spinAnimations(this.context, landedNumber);
     }
     
     /**
      * Adds the bet of a user to the bets list.
      *
      * Assumes that the user already has sufficient funds and payed for
-     * the bet to be placed.
+     * the bet to be placed, and that it is the betting phase.
      *
      * @param  String   userID     ID of the user adding a bet.
      * @param  String   betGroup   Type of roulette bet the user is betting on.
@@ -104,14 +94,9 @@ exports.RouletteGame = class RouletteGame {
      * @return  boolean  If the bet was successfully added or not.
      */
     async addBet(userID, betGroup, betAmount) {
-        if (!this.canBet) {
-            return false;
-        }
-      
         if (!(userID in this.playerBets)) {
             this.playerBets[userID] = new betUtil.Bet();
         }
         this.playerBets[userID].addBet(betGroup, betAmount);
-        return true;
     }
 }
