@@ -256,3 +256,34 @@ exports.betAddedMessage = async function betAddedMessage(context, betGroup, betA
 exports.createErrorMessage = function createErrorMessage(description) {
     return embedUtil.createMessage("Roulette Error", description, undefined, true);
 }
+
+/**
+ * Describes to a user how Roulette and the betting commands work.
+ *
+ * @param  Message  context  The Discord command that asked for help.
+ */
+exports.helpMessage = async function helpMessage(context) {
+    let description = "For info on how Roulette works, use Google.\n\nThis Roulette game gives you " + userInterface.betTime/1000 + " seconds " +
+                      "of betting, then spins the wheel, then " + userInterface.resultTime/1000 + " seconds of viewing your results.\n\n" +
+                      "Here are how the commands work: \n\n";
+    
+    let beforeStartDescription = "Use `" + process.env.PREFIX + "roulette start`.\n\n" + 
+                                 "This starts a Roulette game, as long as no other game is in this channel.";
+  
+    let beforeSpinDescription = "Use `" + process.env.PREFIX + "roulette bet <BET_GROUP> <AMOUNT>`.\n\n" + 
+                      "Where `<AMOUNT>` is how much you are betting on that group, and `<BET_GROUP>` is one of these: ";
+    // account for every betting group
+    for (let group of betGroups) {
+        beforeSpinDescription += "`" + group.name + "`, ";
+    }
+    beforeSpinDescription += " or any number between 0-36.\n\nThe amount of money you get from each of these bets can be viewed at " + 
+      "`https://en.wikipedia.org/wiki/Roulette#Bet_odds_table`. Note, this is French roulette, there is no `00`.";
+    
+    let afterSpinDescription = "Use `" + process.env.PREFIX + "roulette view`.\n\n" +
+                               "This shows you how much you earned/lost that round off of betting.";
+    let message = embedUtil.createMessage("Roulette Help", description, undefined, false);
+    message.addField("Starting a Game", beforeStartDescription);
+    message.addField("Before The Wheel Spins", beforeSpinDescription);
+    message.addField("After The Wheel Spins", afterSpinDescription);
+    context.channel.send(message);
+}

@@ -59,13 +59,14 @@ exports.RouletteGame = class RouletteGame {
      * earnings after betting, and displaying the image of the landed number.
      */
     async spin() {
-        let landedNumber = Math.floor(Math.random() * 37);
+        let landedNumber = Math.floor(Math.random() * 37);   
+        userInterface.spinAnimations(this.context, landedNumber);
+      
         let winningBets = await betUtil.getWinningBets(landedNumber);
         for (let player of Object.keys(this.playerBets)) {
             this.playerBets[player].calculatePayOut(winningBets);
         }
         userInterface.payOutUsers(this.context);
-        userInterface.spinAnimations(this.context, landedNumber);
     }
     
     /**

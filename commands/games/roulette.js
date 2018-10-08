@@ -23,7 +23,7 @@ exports.run = async (client, message, args) => {
             rouletteUI.viewResults(message);
             break;
         case "help":
-            message.channel.send("coming soon - help");
+            rouletteUI.helpMessage(message);
             break;
         default:
             let errorMessage = rouletteUI.createErrorMessage("Invalid reddit subcommand! Use `" + process.env.PREFIX + 

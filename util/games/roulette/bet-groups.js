@@ -38,5 +38,40 @@ const nineteen_to_36 = {
     multiplier: 1,
     values: [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
 };
-
-exports.groupCollections = [odd, even, red, black, one_to_18, nineteen_to_36];
+const first_12 = {
+    name: "first12",
+    multiplier: 2,
+    values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+};
+const second_12 = {
+    name: "second12",
+    multiplier: 2,
+    values: [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+};
+const third_12 = {
+    name: "third12",
+    multiplier: 2,
+    values: [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
+};
+const first_column = {
+    name: "firstcolumn",
+    multiplier: 2,
+    values: [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34]
+};
+const second_column = {
+    name: "secondcolumn",
+    multiplier: 2,
+    values: [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35]
+};
+const third_column = {
+    name: "thirdcolumn",
+    multiplier: 2,
+    values: [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36]
+};
+const basket = {
+    name: "basket",
+    multiplier: 8,
+    values: [0, 1, 2, 3]
+};
+exports.groupCollections = [odd, even, red, black, one_to_18, nineteen_to_36, first_12, second_12, third_12,
+                           first_column, second_column, third_column, basket];
