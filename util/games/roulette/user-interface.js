@@ -40,7 +40,7 @@ exports.startGame = async function startGame(context) {
  */
 exports.addBet = async function addBet(context, args) {
     // make sure there is a roulette game running in the current channel
-    if (!gameMeister.hasGame(context.channel.id) ||
+    if (!(context.channel.id in gameMeister.games) ||
         !(gameMeister.games[context.channel.id] instanceof RouletteGame)) {
         context.channel.send("Please start a Roulette game before placing a bet.");
         return;
@@ -55,15 +55,17 @@ exports.addBet = async function addBet(context, args) {
     }
   
     // make sure the user's betting group actually exists
-    let names = betGroups.filter(group => group.name);
-    let isRealBetGroup = args[1].toLowerCase() in names;
+    let names = betGroups.map(group => group.name);
+    console.log(names);
+    console.log(args[1].toLowerCase());
+    let isRealBetGroup = names.includes(args[1].toLowerCase());
     let isRealBetNumber = (Number(args[1]) >= 0) && (Number(args[1]) <= 36);
     if (!isRealBetGroup && !isRealBetNumber) {
         context.channel.send("That betting category doesn't exist.");
         return;
     }
   
-    // make sure they have enough money and add their bet
+    // make sure they have enough money and then add their bet
     let user = context.channel.guild.member(context.author);
     sql_connection.query("SELECT chad_bucks FROM UserInfo WHERE user_id = " + user.id, function(error, results, fields) {
         // check if the user is registered
@@ -73,13 +75,13 @@ exports.addBet = async function addBet(context, args) {
         }
         // check if user has sufficient funds
         let currentBalance = results[0].chad_bucks;
-        let betAmount = args[2];
+        let betAmount = parseInt(args[2]);
         if(currentBalance < betAmount) {
             context.channel.send("You do not have enough money to make that bet.");
             return;
         }
         // process payment and submit to roulette game
-        sql_connection.query("UPDATE UserInfo SET chad_bucks = " + currentBalance - betAmount + 
+        sql_connection.query("UPDATE UserInfo SET chad_bucks = " + (currentBalance - betAmount) + 
                              " WHERE user_id = " + user.id, function(error, results, fields) {});
         rouletteGame.addBet(user.id, args[1], betAmount);
     });
@@ -97,7 +99,7 @@ exports.addBet = async function addBet(context, args) {
  */
 exports.viewResults = async function viewResults(context) {
     // make sure there is a roulette game running in the current channel
-    if (!gameMeister.hasGame(context.channel.id) ||
+    if (!(context.channel.id in gameMeister.games) ||
         !(gameMeister.games[context.channel.id] instanceof RouletteGame)) {
         context.channel.send("Please start a Roulette game before trying to view results.");
         return;

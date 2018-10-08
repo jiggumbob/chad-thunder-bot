@@ -28,7 +28,7 @@ class GameMeister {
      */
     async requestGame(game) {
         let channelID = game.context.channel.id;
-        if (this.hasGame(channelID)) {
+        if (channelID in this.games) {
             return false;
         } else {
             this.games[channelID] = game;
@@ -45,19 +45,6 @@ class GameMeister {
     async requestDeath(channelID) {
         if (channelID in this.games) {
             delete this.games[channelID];
-        }
-    }
-    
-    /**
-     * Checks if there is a game running in the specified channel.
-     *
-     * @param  String  channelID  The type of game desired to be started.
-     *
-     * @return  boolean  If there is a game in the channel.
-     */
-    async hasGame(channelID) {
-        if (channelID in this.games) {
-            return true;
         }
     }
 }

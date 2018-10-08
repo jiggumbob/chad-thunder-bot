@@ -10,7 +10,7 @@
 
 const betGroups = require("./bet-groups.js");
 
-class Bet {
+exports.Bet = class Bet {
     constructor() {
         this.payIn = 0; // amount total in bets for the round
         this.payOut = 0; // amount to actually be payed to the user
@@ -40,10 +40,10 @@ class Bet {
      */
     calculatePayOut(winningBets) {
         let payOut = 0;
-        for (let bet of this.bets) {
+        for (let betGroup of Object.keys(this.bets)) {
             for (let winGroup of winningBets) {
-                if (bet == winGroup.name) {
-                    payOut += this.bets[bet] * winGroup.multiplier + this.bets[bet];
+                if (betGroup == winGroup.name) {
+                    payOut += this.bets[betGroup] * winGroup.multiplier + this.bets[betGroup];
                 }
             }
         }

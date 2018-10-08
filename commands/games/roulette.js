@@ -11,22 +11,27 @@
 
 var rouletteUI = require("../../util/games/roulette/user-interface.js");
 exports.run = async (client, message, args) => {
-    switch (args[2]) {
+    switch (args[0]) {
         case "start":
+            rouletteUI.startGame(message);
             break;
         case "bet":
+            rouletteUI.addBet(message, args);
             break;
         case "view":
+            rouletteUI.viewResults(message);
             break;
         case "help":
+            message.channel.send("coming soon - help");
             break;
         default:
+            message.channel.send("Unknown roulette subcommand");
             break;
     }
 }
 
 exports.conf = {
-    enabled: false,
+    enabled: true,
     guildOnly: false,
     aliases: [],
     permLevel: 0
@@ -35,5 +40,5 @@ exports.conf = {
 exports.help = {
     name: "roulette",
     description: "Roulette commands. Use " + process.env.PREFIX + " roulette help for info.", 
-    usage: "roulette <bet/view/help> <bet group> <amount>" 
+    usage: "roulette <start/bet/view/help> <bet group> <amount>" 
 };

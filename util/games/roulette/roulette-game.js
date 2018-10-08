@@ -17,7 +17,7 @@ const userInterface = require("./user-interface.js");
 const betTime = 15000;
 const resultTime = 15000;
 
-class RouletteGame {
+exports.RouletteGame = class RouletteGame {
     constructor(context) {
         this.playerBets = {} // player ID to Bet object
         this.context = context; // the discord message that started the game
@@ -33,13 +33,24 @@ class RouletteGame {
      * then gives time for users to view their earnings/losses before terminating.
      */
     async start() {
+        let self = this; // this doesn't refer to the object anymore in the setTimeouts
         this.gameStartGreeting();
-        this.getUserBets();
-        this.spin();
-        this.canViewResults = true;
+      
+        // get user bets
+        this.canBet = true;
         setTimeout(function() {
-            gameMeister.requestDeath(this.context.channel.id);
-        }, resultTime);
+            self.canBet = false;
+            
+            self.spin();
+            
+            // wait for users to view results then terminate
+            self.context.channel.send("Use view to view results");
+            self.canViewResults = true;
+            setTimeout(function() {
+                self.context.channel.send("End of game.");
+                gameMeister.requestDeath(self.context.channel.id);
+            }, resultTime);
+        }, betTime);
     }
     
     /**
@@ -53,7 +64,7 @@ class RouletteGame {
     /**
      * Allows bets to be added for a period of time, then stops it.
      */
-    getUserBets() {
+    async getUserBets() {
         this.canBet = true;
         setTimeout(function() {
             this.canBet = false;
@@ -71,12 +82,13 @@ class RouletteGame {
         let message = await this.context.channel.send("spinning gif");
       
         let landedNumber = Math.floor(Math.random() * 37);
-        let winningBets = betUtil.getWinningBets(landedNumber);
+        let winningBets = await betUtil.getWinningBets(landedNumber);
         for (let player of Object.keys(this.playerBets)) {
-            this.playerBets[player].calculatePayOut();
+            this.playerBets[player].calculatePayOut(winningBets);
         }
         
         message.edit("image of a stationary roulette wheel with a ball on one");
+        this.context.channel.send("Landed on " + landedNumber);
     }
     
     /**
