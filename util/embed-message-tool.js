@@ -14,7 +14,7 @@ const Discord = require("discord.js");
 const errorColor = 0xFF524C;
 const normalColor = 0xFFDB1D;
 
-exports.createMessage = function createErrorMessage (title, description, imageName, isError) {
+exports.createMessage = function createMessage (title, description, imageName, isError) {
     let embedMessage = new Discord.RichEmbed();
     if (!(typeof title === "undefined")) {
         embedMessage.setTitle(title);
