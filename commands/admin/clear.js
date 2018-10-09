@@ -21,9 +21,9 @@ exports.run = async (client, message, args) => {
         );
         return;
     }
-
-     // delete one extra to remove user's message
-    message.channel.bulkDelete(+args[0] + 1);
+  
+    // delete one extra to remove user's message
+    await message.channel.bulkDelete(+args[0] + 1, true);
 }
 exports.conf = {
     enabled: true,
@@ -34,6 +34,6 @@ exports.conf = {
 
 exports.help = {
     name: "clear",
-    description: "Clears a certain number of messages.",
+    description: "Clears a certain number of messages. Cannot clear messages older than 14 days.",
     usage: "clear <number>"
 };

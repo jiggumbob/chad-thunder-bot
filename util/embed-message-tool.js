@@ -14,7 +14,7 @@ const Discord = require("discord.js");
 const errorColor = 0xFF524C;
 const normalColor = 0xFFDB1D;
 
-exports.createMessage = function createErrorMessage (title, description, imageName, isError) {
+exports.createMessage = function createMessage (title, description, imageName, isError) {
     let embedMessage = new Discord.RichEmbed();
     if (!(typeof title === "undefined")) {
         embedMessage.setTitle(title);
@@ -45,5 +45,6 @@ const emojis = {
     "smiling sunglasses" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/smiling-face-with-sunglasses_1f60e.png",
     "fearful face" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/fearful-face_1f628.png",
     "pensive" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/pensive-face_1f614.png",
-    "smiling face" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/smiling-face-with-open-mouth-and-smiling-eyes_1f604.png"
+    "smiling face" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/smiling-face-with-open-mouth-and-smiling-eyes_1f604.png",
+    "exclamation mark": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/double-exclamation-mark_203c.png"
 };

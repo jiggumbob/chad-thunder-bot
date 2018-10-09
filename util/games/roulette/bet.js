@@ -10,10 +10,44 @@
 
 const betGroups = require("./bet-groups.js");
 
-class Bet {
+exports.Bet = class Bet {
     constructor() {
-        this.earning = 0; // return off of bets after spinning the wheel (includes initial bets)
-        this.bets = {} // bet category, ex: "00", "evens", to bet cash amount
+        this.payIn = 0; // amount total in bets for the round
+        this.payOut = 0; // amount to actually be payed to the user
+        this.bets = {}; // bet category, ex: "0", "evens", to bet cash amount
+    }
+    
+    /**
+     * Adds a certain value bet on a group.
+     *
+     * @param  string   betGroup   The bet group on the roulette table.
+     * @param  integer  betAmount  The amount to be bet on that group.
+     */
+    addBet(betGroup, betAmount) {
+        if (betGroup in this.bets) {
+            this.bets[betGroup] += betAmount;
+        } else {
+            this.bets[betGroup] = betAmount;
+        }
+        this.payIn += betAmount;
+    }
+  
+    /**
+     * Calculates how much to pay the user based on their bets and the 
+     * winning requirements.
+     *
+     * @param  Array  winningBets  Names of all winning betting groups.
+     */
+    calculatePayOut(winningBets) {
+        let payOut = 0;
+        for (let betGroup of Object.keys(this.bets)) {
+            for (let winGroup of winningBets) {
+                if (betGroup == winGroup.name) {
+                    payOut += this.bets[betGroup] * winGroup.multiplier + this.bets[betGroup];
+                }
+            }
+        }
+        this.payOut = payOut;
     }
 }
 
@@ -25,13 +59,17 @@ class Bet {
  *
  * @return  Array  String array of the names of all winning betting groups.
  */
-async function getWinningBets(landedNumber) {
-    let winningBets = [landedNumber];
-        // loop through all possible betting groups and add the ones that contain this number to array
-        for (let group of betGroups.groupCollections) {
-            if (landedNumber in group.values) {
-                winningBets.push(group.name)
-            }
+exports.getWinningBets = async function getWinningBets(landedNumber) {
+    // add the group of just betting on the number itself
+    let winningBets = [{
+        name: landedNumber.toString(),
+        multiplier: 35
+    }];
+    // loop through all possible betting groups and add the ones that contain this number to array
+    for (let group of betGroups.groupCollections) {
+        if (group.values.includes(landedNumber)) {
+            winningBets.push(group);
         }
+    }
     return winningBets;
 }
