@@ -92,10 +92,10 @@ exports.play = async function play(context, args) {
     if (!context.guild.voiceConnection) {
         context.member.voiceChannel.join().then(function(connection) {
             streamConnection(connection, context);
-            let message = embedUtil.createMessage("Connected", "Have fun listening!", "smiling sunglasses", false);
-            context.channel.send(message);
         });
     }
+    let message = embedUtil.createMessage("Song Added", "Have fun listening!", "musical note", false);
+    context.channel.send(message);
 }
 
 /**
@@ -109,6 +109,8 @@ exports.skip = async function skip(context) {
     if (server.dispatcher) {
         server.dispatcher.end();
     }
+    let message = embedUtil.createMessage("Song Skipped", undefined, "curved arrow", false);
+    context.channel.send(message);
 }
 
 /**
@@ -121,7 +123,7 @@ exports.stop = async function stop(context) {
   
     if (context.guild.voiceConnection) {
         context.guild.voiceConnection.disconnect();
-        let message = embedUtil.createMessage("Disconnected", "Thanks for listening!", "smiling sunglasses", false);
+        let message = embedUtil.createMessage("Disconnected", "Thanks for listening!", "waving hand", false);
         context.channel.send(message);
     }
 }
