@@ -46,5 +46,6 @@ const emojis = {
     "fearful face" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/fearful-face_1f628.png",
     "pensive" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/pensive-face_1f614.png",
     "smiling face" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/smiling-face-with-open-mouth-and-smiling-eyes_1f604.png",
-    "exclamation mark": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/double-exclamation-mark_203c.png"
+    "exclamation mark": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/double-exclamation-mark_203c.png",
+    "crossed out bell" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/bell-with-cancellation-stroke_1f515.png"
 };
