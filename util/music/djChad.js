@@ -97,7 +97,7 @@ exports.play = async function play(context, args) {
         // song has been paused so resume it
         server.dispatcher.resume();
         let songName = await getTitle(server.nowPlaying);
-        let description = "**Resumed** `" + songName + "`\n\nHave fun listening!";
+        let description = "**Resumed** [" + songName + "](" + server.nowPlaying +")\n\nHave fun listening!";
         let message = embedUtil.createMessage("Song Resumed", description, "play pause", false);
         context.channel.send(message); 
         return;
@@ -202,7 +202,7 @@ exports.pause = async function pause(context) {
         return;
     }
   
-    let description = "**Paused** `" + await getTitle(server.nowPlaying) + "`";
+    let description = "**Paused** [" + await getTitle(server.nowPlaying) + "](" + server.nowPlaying +")";
     server.dispatcher.pause();
     let message = embedUtil.createMessage("Song Paused", description, "pause button", false);
     context.channel.send(message);
