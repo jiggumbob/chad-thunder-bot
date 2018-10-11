@@ -11,8 +11,6 @@
 
 const embedUtil = require("../embed-message-tool.js");
 const ytdl = require("ytdl-core");
-const ytInfo = require("youtube-info");
-const ytID = require("get-youtube-id");
 
 var servers = {};
 var ytKey = process.env.GOOGLEKEY;
@@ -32,7 +30,7 @@ function isYoutube(str) {
  * @param  String  url  Youtube URL to find the title of.
  */
 async function getTitle(url) {
-    return (await ytInfo(ytID(url))).title;
+    return (await ytdl.getBasicInfo(ytdl.getURLVideoID(url))).title;
 }
 
 /**
