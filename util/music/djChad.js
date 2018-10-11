@@ -82,6 +82,7 @@ exports.play = async function play(context, args) {
         return;
     }
     
+    // this server doesn't have a queue in memory --> create one
     if (!servers[context.guild.id]) {
         servers[context.guild.id] = {
             queue: []
@@ -91,10 +92,10 @@ exports.play = async function play(context, args) {
     var server = servers[context.guild.id];
     server.queue.push(args[0]);
   
+    // connect to the user's voice channel if we aren't already
     if (!context.guild.voiceConnection) {
-        context.member.voiceChannel.join().then(function(connection) {
-            streamConnection(connection, context);
-        });
+        let connection = await context.member.voiceChannel.join();
+        streamConnection(connection, context);
     }
     let description = "Added `" + await getTitle(args[0]) + "` to the queue.\n\nHave fun listening!";
     let message = embedUtil.createMessage("Song Added", description, "musical note", false);
