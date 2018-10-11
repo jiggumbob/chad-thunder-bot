@@ -8,7 +8,7 @@
 var djChad = require("../../util/music/djChad.js");
 
 exports.run = async (client, message, args) => {
-    djChad.stop(message, args);
+    djChad.leave(message, args);
 }
 
 exports.conf = {
@@ -19,7 +19,7 @@ exports.conf = {
 };
 
 exports.help = {
-    name: "stop",
-    description: "Stop playing music.",
-    usage: "stop"
+    name: "leave",
+    description: "Leaves the voice channel and stops playing music.",
+    usage: "leave"
 };

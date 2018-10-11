@@ -23,7 +23,7 @@ var ytKey = process.env.GOOGLEKEY;
  * @param  String  str  String to be checked.
  */
 function isYoutube(str) {
-    return str.toLowerCase().indexOf("youtube.com") > -1;
+    return str.includes("youtube.com") || str.includes("youtu.be");
 }
 
 /**
@@ -118,11 +118,11 @@ exports.skip = async function skip(context) {
 }
 
 /**
- * Handles user requests to stop song playing.
+ * Handles user requests to stop song playing and leave the channel.
  *
  * @param  Message  context  The Discord command that initiated the bot response.
  */
-exports.stop = async function stop(context) {
+exports.leave = async function stop(context) {
     var server = servers[context.guild.id];
     if (!context.guild.voiceConnection) {
         let errorMessage = createErrorMessage("I'm not even playing songs!");
