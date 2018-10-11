@@ -11,9 +11,11 @@
 
 const embedUtil = require("../embed-message-tool.js");
 const ytdl = require("ytdl-core");
+const ytKey = process.env.GOOGLEKEY;
+const YT = require("simple-youtube-api");
+const Youtube = new YT(ytKey);
 
 var servers = {};
-var ytKey = process.env.GOOGLEKEY;
 
 /**
  * Returns whether the argument is a youtube link or not.
@@ -69,11 +71,14 @@ function streamConnection(connection, context) {
  */
 exports.play = async function play(context, args) {
     const member = context.member;
-    if (!args[0] || !isYoutube(args[0])) {
-        let errorMessage = createErrorMessage("Please provide a proper YouTube link");
+    // nothing provided
+    if (!args[0]) {
+        let errorMessage = createErrorMessage("Please provide a YouTube link or search term.");
         context.channel.send(errorMessage);
         return;
     }
+  
+    // user isn't in a voice channel
     if (!context.member.voiceChannel) {
         let errorMessage = createErrorMessage("You need to join a voice channel first.");
         context.channel.send(errorMessage);
@@ -87,15 +92,27 @@ exports.play = async function play(context, args) {
         };
     }
   
+    let songURL = args[0];
+    // search for the video if argument isn't a URL
+    if (!isYoutube(args[0])) {
+        let temp = await search(context, args[0]);
+        if (!temp) {
+            let errorMessage = createErrorMessage("Nothing was found for that search.");
+            context.channel.send(errorMessage);
+            return;
+        }
+        songURL = temp.url;
+    }
+  
     var server = servers[context.guild.id];
-    server.queue.push(args[0]);
+    server.queue.push(songURL);
   
     // connect to the user's voice channel if we aren't already
     if (!context.guild.voiceConnection) {
         let connection = await context.member.voiceChannel.join();
         streamConnection(connection, context);
     }
-    let description = "Added `" + await getTitle(args[0]) + "` to the queue.\n\nHave fun listening!";
+    let description = "Added `" + await getTitle(songURL) + "` to the queue.\n\nHave fun listening!";
     let message = embedUtil.createMessage("Song Added", description, "musical note", false);
     context.channel.send(message);
 }
@@ -159,6 +176,18 @@ exports.queue = async function queue(context) {
       message.addField("Queue", queueSongs);
     }
     context.channel.send(message);
+}
+
+/**
+ * Returns a URL for a Youtube video based on the search term.
+ *
+ * @param  String  query  Query for Youtube video search.
+ *
+ * @return  String  URL of the first video (if found).
+ */
+async function search (query) {
+    let urls = await Youtube.searchVideos(query, 1);
+    return urls[0];
 }
 
 /**

@@ -8,6 +8,7 @@ dependencies:
   mysql: 2.16.0
   node-ddg-api: 0.1.4
   opusscript: 0.0.6
+  simple-youtube-api: 5.0.2
   snoowrap: 1.15.2
   ytdl-core: 0.26.1
 packages:
@@ -205,6 +206,13 @@ packages:
     dev: false
     resolution:
       integrity: sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
+  /cross-fetch/2.2.2:
+    dependencies:
+      node-fetch: 2.1.2
+      whatwg-fetch: 2.0.4
+    dev: false
+    resolution:
+      integrity: sha1-pH/09/xxLauo9qaVoRyUhEDUVyM=
   /cssom/0.3.4:
     dev: false
     resolution:
@@ -669,6 +677,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=
+  /iso8601-duration/1.1.6:
+    dev: false
+    resolution:
+      integrity: sha512-wyVl4tmjZyaoh9GeohL3Dh4DKwr8CgiOL8eFRyRJyk8nopHOhZ0Ql76EwOUvx3OGQeI08xGj8+4AJgyXYs3iJw==
   /isstream/0.1.2:
     dev: false
     resolution:
@@ -899,6 +911,13 @@ packages:
     hasBin: true
     resolution:
       integrity: sha1-9lQqS93htWf+QoL8kzKvUeqKjos=
+  /node-fetch/2.1.2:
+    dev: false
+    engines:
+      node: 4.x || >=6.0.0
+    resolution:
+      integrity: sha1-q4hOjn5X44qUR1POxwb3iNF2i7U=
+      tarball: 'http://registry.npmjs.org/node-fetch/-/node-fetch-2.1.2.tgz'
   /node-forge/0.7.6:
     dev: false
     resolution:
@@ -1203,6 +1222,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-BvE/TwpZX4FXExxOxZyRGQQv651MSwmWKZGqvmPcRIjDqWub67kTKuIMx43cZZrS/cBBzwBcNDWoFxt2XEFIpQ==
+  /simple-youtube-api/5.0.2:
+    dependencies:
+      cross-fetch: 2.2.2
+      iso8601-duration: 1.1.6
+    dev: false
+    resolution:
+      integrity: sha512-MtFToFLoX4eWNVUcqhbJ3J7SN8tBNaHRAHC4RKzSCW7cEVVZygNHa3nhCEWVINBoI1fmxjEUW7zwdlChYNuoZg==
   /snekfetch/3.6.4:
     deprecated: use node-fetch instead
     dev: false
@@ -1387,6 +1413,11 @@ packages:
     dev: false
     resolution:
       integrity: sha512-b5lim54JOPN9HtzvK9HFXvBma/rnfFeqsic0hSpjtDbVxR3dJKLc+KB4V6GgiGOvl7CY/KNh8rxSo9DKQrnUEw==
+  /whatwg-fetch/2.0.4:
+    dev: false
+    resolution:
+      integrity: sha512-dcQ1GWpOD/eEQ97k66aiEVpNnapVj90/+R+SXTPYGHpYBBypfKJEQjLrvMZ7YXbKm21gXd4NcuxUTjiv1YtLng==
+      tarball: 'http://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-2.0.4.tgz'
   /whatwg-mimetype/2.2.0:
     dev: false
     resolution:
@@ -1465,5 +1496,6 @@ specifiers:
   mysql: ^2.16.0
   node-ddg-api: ^0.1.4
   opusscript: ^0.0.6
+  simple-youtube-api: ^5.0.2
   snoowrap: ^1.15.2
   ytdl-core: ^0.26.1
