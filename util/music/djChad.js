@@ -2,6 +2,9 @@
  * Defines all methods related to music functionality in Chad
  * Thunder Bot.
  *
+ * servers holds objects for every Discord server with the bot and each server
+ * contains a queue of songs.
+ *
  * @author Jude Markabawi, Stanley Wang.
  * @license See the LICENSE file for details.
  */
@@ -47,12 +50,14 @@ function streamConnection(connection, context) {
   
     server.dispatcher = connection.playStream(ytdl(server.queue[0], {filter: "audioonly"}));
     
-    server.queue.shift();
+    server.nowPlaying = server.queue.shift();
+  
     server.dispatcher.on("end", function() {
         if (server.queue[0]) {
             streamConnection(connection, context);
         }
         else {
+            server.nowPlaying = undefined;
             connection.disconnect();
         }
     });
@@ -94,7 +99,8 @@ exports.play = async function play(context, args) {
             streamConnection(connection, context);
         });
     }
-    let message = embedUtil.createMessage("Song Added", "Have fun listening!", "musical note", false);
+    let description = "Added `" + await getTitle(args[0]) + "` to the queue.\n\nHave fun listening!";
+    let message = embedUtil.createMessage("Song Added", description, "musical note", false);
     context.channel.send(message);
 }
 
@@ -120,12 +126,15 @@ exports.skip = async function skip(context) {
  */
 exports.stop = async function stop(context) {
     var server = servers[context.guild.id];
-  
-    if (context.guild.voiceConnection) {
-        context.guild.voiceConnection.disconnect();
-        let message = embedUtil.createMessage("Disconnected", "Thanks for listening!", "waving hand", false);
-        context.channel.send(message);
+    if (!context.guild.voiceConnection) {
+        let errorMessage = createErrorMessage("I'm not even playing songs!");
+        context.channel.send(errorMessage);
+        return;
     }
+    
+    context.guild.voiceConnection.disconnect();
+    let message = embedUtil.createMessage("Disconnected", "Thanks for listening!", "waving hand", false);
+    context.channel.send(message);
 }
 
 /**
@@ -135,20 +144,25 @@ exports.stop = async function stop(context) {
  */
 exports.queue = async function queue(context) {
     var server = servers[context.guild.id];
-    if (!server || server.queue.length == 0) {
+    if (!server || !server.nowPlaying) {
         let errorMessage = createErrorMessage("There is nothing in the queue.");
         context.channel.send(errorMessage);
         return;
     }
     
-    var titles = [];  
-    // for (let url of server.queue) {
-    //     titles.push(getTitle(url));
-    // }
-    for (var i = 0; i < server.queue.length; i++) { 
-        titles[i] = await getTitle(server.queue[i]); 
+    let nowPlaying = "**Now Playing: **`" + await getTitle(server.nowPlaying) + "`\n";
+    let queueSongs = "";
+    const numToDisplay = 15; // only display first numToDisplay songs
+    let length = (server.queue.length > numToDisplay) ? numToDisplay : server.queue.length;
+    for (let i = 0; i < length; i++) { 
+        let songTitle = await getTitle(server.queue[i]); 
+        queueSongs += "**" + (i+1) + ".** `" + songTitle + "`\n";
     }
-    console.log(titles.toString());
+    let message = embedUtil.createMessage("Songs", nowPlaying, "musical note", false);
+    if (queueSongs.length > 0) {
+      message.addField("Queue", queueSongs);
+    }
+    context.channel.send(message);
 }
 
 /**
