@@ -53,7 +53,7 @@ function streamConnection(connection, context) {
     server.dispatcher.on("end", function() {
         // if loop is enabled, push the current song back into queue again
         if (server.loop) {
-            server.queue[0] = server.nowPlaying;
+            server.queue.unshift(server.nowPlaying);
         }
         // if there are more song in the queue
         if (server.queue[0]) {
