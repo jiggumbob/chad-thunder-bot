@@ -121,7 +121,15 @@ exports.play = async function play(context, args) {
         }
         songURL = temp.url;
     }
-  
+    
+    // ensure this is a valid URL now
+    try { 
+        await Youtube.getVideo(songURL);
+    } catch (e) { 
+        let errorMessage = createErrorMessage("Please provide a valid Youtube link or search term.");
+        context.channel.send(errorMessage);
+        return;
+    }
     server.queue.push(songURL);
   
     // connect to the user's voice channel if we aren't already
@@ -250,6 +258,42 @@ exports.loop = async function loop(context) {
     let message = embedUtil.createMessage(title, description, emoji, false);
     context.channel.send(message);
 }
+
+/**
+ * Handles user requests to remove a song from the queue.
+ *
+ * @param  Message  context  The Discord command that initiated the bot response.
+ * @param  Array    args     Arguments the user provided in their command.
+ */
+exports.removeFromQueue = async function removeFromQueue(context, args) {
+    var server = servers[context.guild.id];
+    if (!server || !server.nowPlaying) {
+        let errorMessage = createErrorMessage("There is nothing in the queue to remove.");
+        context.channel.send(errorMessage);
+        return;
+    }
+    // check to see if a number was provided
+    if (!args[0]) {
+        let errorMessage = createErrorMessage("Please specify which position in the queue to remove.");
+        context.channel.send(errorMessage);
+        return;
+    }
+    
+    // check to see if the number is within the queue bounds
+    // use args[0] - 1 because the displayed list starts at 1 while the array start at 0
+    if (!server.queue[args[0] - 1]) {
+        let errorMessage = createErrorMessage("That isnt a valid option in the queue.");
+        context.channel.send(errorMessage);
+        return;
+    }
+    
+    let removedVideoURL = server.queue.splice(args[0] - 1, 1)[0]; // removes that song from the queue
+  
+    let description = "**Removed** `" + await getTitle(removedVideoURL) + "` from the queue.";
+    let message = embedUtil.createMessage("Removed Video", description, "eject symbol", false);
+    context.channel.send(message);
+}
+
 /**
  * Returns a URL for a Youtube video based on the search term.
  *

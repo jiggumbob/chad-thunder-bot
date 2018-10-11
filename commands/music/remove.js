@@ -1,5 +1,5 @@
 /**
- * Processes user commands to loop the song.
+ * Processes user commands to remove a song from the music queue.
  *
  * @author Jude Markabawi, Stanley Wang.
  * @license See the LICENSE file for details.
@@ -8,7 +8,7 @@
 var djChad = require("../../util/music/djChad.js");
 
 exports.run = async (client, message, args) => {
-    djChad.loop(message);
+    djChad.removeFromQueue(message, args);
 }
 
 exports.conf = {
@@ -19,7 +19,7 @@ exports.conf = {
 };
 
 exports.help = {
-    name: "loop",
-    description: "Loops the current song.",
-    usage: "loop"
+    name: "remove",
+    description: "Removes a song in the queue.",
+    usage: "remove <song position>"
 };
