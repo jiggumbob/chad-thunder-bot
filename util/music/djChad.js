@@ -94,7 +94,7 @@ exports.play = async function play(context, args) {
             context.channel.send(errorMessage);
             return;
         }
-        // song has been paused
+        // song has been paused so resume it
         server.dispatcher.resume();
         let songName = await getTitle(server.nowPlaying);
         let description = "**Resumed** `" + songName + "`\n\nHave fun listening!";
@@ -110,7 +110,7 @@ exports.play = async function play(context, args) {
         return;
     }
   
-    let songURL = args[0];
+    let requestURL = args[0];
     // search for the video if argument isn't a URL
     if (!isYoutube(args[0])) {
         let temp = await search(args.join(" ")); // all the words in their search
@@ -119,28 +119,59 @@ exports.play = async function play(context, args) {
             context.channel.send(errorMessage);
             return;
         }
-        songURL = temp.url;
+        requestURL = temp.url;
     }
     
-    // ensure this is a valid URL now
-    try { 
-        await Youtube.getVideo(songURL);
-    } catch (e) { 
-        let errorMessage = createErrorMessage("Please provide a valid Youtube link or search term.");
-        context.channel.send(errorMessage);
-        return;
-    }
-    server.queue.push(songURL);
+    var isPlaylist;  
+    var playlist;
   
+    // ensure this is a valid URL (video or playlist) now
+    try {
+        playlist = await Youtube.getPlaylist(requestURL);
+        isPlaylist = true;
+    } catch (e) {}
+    if (!isPlaylist) {
+        try {
+            await Youtube.getVideo(requestURL);
+        } catch (e) {
+            let errorMessage = createErrorMessage("Please provide a valid Youtube link or search term.");
+            context.channel.send(errorMessage);
+            return;
+        }
+    }
+  
+    var title;
+    var durationString;
+    
+    if (isPlaylist) {
+        let playlistVids = await playlist.getVideos();
+        title = playlist.title;
+        let durSecs = 0;
+      
+        for (let vid of playlistVids) {
+            let vidCopy = await Youtube.getVideo(vid.url); // allows the duration to not be undefined
+            server.queue.push(vid.url); // add song to queue
+            durSecs += vidCopy.durationSeconds;
+        }
+        durationString = await getDurationFromSeconds(durSecs);
+    } else {
+        // push the single video to queue and set title and duration
+        server.queue.push(requestURL);
+        title = await getTitle(requestURL);
+        durationString = await getDuration(requestURL);
+    }
+    
+    let header = isPlaylist ? "Playlist Added" : "Song Added";
+    let description = "**Added** [" + title + "](" + requestURL + ") to the queue.\n" +
+                      "**Length** `" + durationString + "`\n\nHave fun listening!";
+    let message = embedUtil.createMessage(header, description, "musical note", false);
+    context.channel.send(message);
+    
     // connect to the user's voice channel if we aren't already
     if (!context.guild.voiceConnection) {
         let connection = await context.member.voiceChannel.join();
         streamConnection(connection, context);
     }
-    let description = "**Added** `" + await getTitle(songURL) + "` to the queue.\n" +
-                      "**Length** `" + await getDuration(songURL) + "`\n\nHave fun listening!";
-    let message = embedUtil.createMessage("Song Added", description, "musical note", false);
-    context.channel.send(message);
 }
 
 /**
@@ -159,12 +190,12 @@ exports.pause = async function pause(context) {
     var server = servers[context.guild.id];
   
     // audio isn't currently being played
+  
     if (!server || !server.nowPlaying) {
         let errorMessage = createErrorMessage("Nothing is currently playing.");
         context.channel.send(errorMessage);
         return;
     }
-    
     if (server.dispatcher.paused) {
         let errorMessage = createErrorMessage("Song is already paused.");
         context.channel.send(errorMessage);
@@ -209,6 +240,8 @@ exports.leave = async function stop(context) {
     }
     
     context.guild.voiceConnection.disconnect();
+    server.nowPlaying = undefined;
+    server.queue = [];
     let message = embedUtil.createMessage("Disconnected", "Thanks for listening!", "waving hand", false);
     context.channel.send(message);
 }
@@ -226,14 +259,15 @@ exports.queue = async function queue(context) {
         return;
     }
     
-    let nowPlaying = "**Now Playing **`" + await getTitle(server.nowPlaying) + 
-                     "` | `" + await getDuration(server.nowPlaying) + "`\n";
+    let nowPlaying = "**Now Playing **[" + await getTitle(server.nowPlaying) + 
+                     "](" + server.nowPlaying + ") | `" + await getDuration(server.nowPlaying) + "`\n";
     let queueSongs = "";
-    const numToDisplay = 15; // only display first numToDisplay songs
+    const numToDisplay = 5; // only display first numToDisplay songs
     let length = (server.queue.length > numToDisplay) ? numToDisplay : server.queue.length;
     for (let i = 0; i < length; i++) { 
         let songTitle = await getTitle(server.queue[i]); 
-        queueSongs += "**" + (i+1) + ".** `" + songTitle + "` | `" + await getDuration(server.queue[i]) + "`\n";
+        queueSongs += "**" + (i+1) + ".** [" + songTitle + "](" + server.queue[i] + 
+        ") | `" + await getDuration(server.queue[i]) + "`\n";
     }
     let message = embedUtil.createMessage("Songs", nowPlaying, "musical note", false);
     if (queueSongs.length > 0) {
@@ -323,28 +357,24 @@ function createErrorMessage(description) {
  */
 async function getDuration(url) {
     let video = await Youtube.getVideo(url);
-    let duration = video.duration;
+    return await getDurationFromSeconds(video.durationSeconds);
+}
+
+/**
+ * Returns a String representation of the duration of a Youtube video with
+ * the duration specified in the object.
+ *
+ * @param  Integer  durationSeconds  Duration of the video in seconds.
+ */
+async function getDurationFromSeconds(durationSeconds) {
     let durationString = "";
+    let hours = Math.floor(durationSeconds / 3600);
+    let minutes = Math.floor(durationSeconds % 3600 / 60);
+    let seconds = Math.floor(durationSeconds % 3600 % 60);
     
-    // turn duration into a string
-    if (duration.hours != 0) {
-        let temp = duration.hours + ":";
-        // ensure that it is two decimals
-        if (duration.hours < 10) {
-            temp = "0" + temp;
-        }
-        durationString += temp;
-    }
-    let tempMin = duration.minutes + ":";
-    if (duration.minutes < 10) {
-        tempMin = "0" + tempMin;
-    }
-    durationString += tempMin;
-    let tempSec = duration.seconds;
-    if (duration.seconds < 10) {
-        tempSec = "0" + tempSec;
-    }
-    durationString += tempSec;
-    
-    return durationString;
+    // don't display hours unless there actually are any
+    let hourString = hours > 10 ? hours + ":" : (hours > 0 ? "0" + hours + ":" : "");
+    let minuteString = (minutes > 10 ? minutes : "0" + minutes) + ":";
+    let secondString = seconds > 10 ? seconds : "0" + seconds;
+    return (hourString + minuteString + secondString);
 }
