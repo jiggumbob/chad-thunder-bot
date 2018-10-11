@@ -95,7 +95,7 @@ exports.play = async function play(context, args) {
     let songURL = args[0];
     // search for the video if argument isn't a URL
     if (!isYoutube(args[0])) {
-        let temp = await search(context, args[0]);
+        let temp = await search(args.join(" ")); // all the words in their search
         if (!temp) {
             let errorMessage = createErrorMessage("Nothing was found for that search.");
             context.channel.send(errorMessage);
