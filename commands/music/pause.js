@@ -1,5 +1,5 @@
 /**
- * Processes user commands to stop music.
+ * Processes user commands to pause the song.
  *
  * @author Jude Markabawi, Stanley Wang.
  * @license See the LICENSE file for details.
@@ -8,7 +8,7 @@
 var djChad = require("../../util/music/djChad.js");
 
 exports.run = async (client, message, args) => {
-    djChad.leave(message, args);
+    djChad.pause(message);
 }
 
 exports.conf = {
@@ -19,7 +19,7 @@ exports.conf = {
 };
 
 exports.help = {
-    name: "leave",
-    description: "Leaves the voice channel and stops playing music.",
-    usage: "leave"
+    name: "pause",
+    description: "Pauses current song.",
+    usage: "pause"
 };

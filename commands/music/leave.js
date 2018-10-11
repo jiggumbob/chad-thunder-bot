@@ -1,5 +1,5 @@
 /**
- * Processes user commands to skip a song.
+ * Processes user commands to stop music.
  *
  * @author Jude Markabawi, Stanley Wang.
  * @license See the LICENSE file for details.
@@ -8,18 +8,18 @@
 var djChad = require("../../util/music/djChad.js");
 
 exports.run = async (client, message, args) => {
-    djChad.skip(message, args);
+    djChad.leave(message, args);
 }
 
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: ["s"],
+    aliases: ["l"],
     permLevel: 0
 };
 
 exports.help = {
-    name: "skip",
-    description: "Skip the current song.",
-    usage: "skip"
+    name: "leave",
+    description: "Leaves the voice channel and stops playing music.",
+    usage: "leave"
 };
