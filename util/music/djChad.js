@@ -11,14 +11,11 @@
 
 const embedUtil = require("../embed-message-tool.js");
 const ytdl = require("ytdl-core");
-// const ytInfo = require("simple-youtube-api");
 const ytInfo = require("youtube-info");
 const ytID = require("get-youtube-id");
 
 var servers = {};
 var ytKey = process.env.GOOGLEKEY;
-
-// const youtube = new ytInfo(ytKey);
 
 /**
  * Returns whether the argument is a youtube link or not.
