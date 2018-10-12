@@ -55,6 +55,7 @@ const emojis = {
     "play pause": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/144/twitter/154/black-right-pointing-triangle-with-double-vertical-bar_23ef.png",
     "repeat arrow": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/clockwise-rightwards-and-leftwards-open-circle-arrows_1f501.png",
     "right arrow": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/black-rightwards-arrow_27a1.png",
-    "eject symbol" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/eject-symbol_23cf.png"
+    "eject symbol" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/eject-symbol_23cf.png",
+    "books": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/books_1f4da.png" 
     
 };

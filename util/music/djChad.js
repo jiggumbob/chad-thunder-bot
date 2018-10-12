@@ -344,6 +344,8 @@ async function search (query) {
  * Provides a unified function to create Music errors.
  *
  * @param  String  description  Description of the error.
+ *
+ * @return  RichEmbed  Embedded error message.
  */
 function createErrorMessage(description) {
     return embedUtil.createMessage("DJ Chad Error", description, "crossed out bell", true);
