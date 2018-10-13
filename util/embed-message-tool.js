@@ -12,7 +12,7 @@
 const Discord = require("discord.js");
 
 const errorColor = 0xFF524C;
-const normalColor = 0xFFDB1D;
+const normalColor = 0x7289DA;
 
 exports.createMessage = function createMessage (title, description, imageName, isError) {
     let embedMessage = new Discord.RichEmbed();

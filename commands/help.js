@@ -8,32 +8,12 @@
  * @license See the LICENSE file for details.
  */
 
-const Discord = require("discord.js");
+const embedUtil = require("../util/embed-message-tool");
 
 exports.run = async (client, message, args) => {
-    let embed = new Discord.RichEmbed()
-    if (!args[0]) {
-        embed.setTitle("Commands");
-        embed.setDescription("Use " + process.env.PREFIX + "help <command> for details.");
-        embed.setColor(0xFFDB1D);
-        // list every enabled command and its description
-        client.commands.forEach(function(c) {
-            if(c.conf.enabled) {
-                embed.addField(c.help.name, c.help.description);
-            }
-        });
-        message.channel.send(embed);
-    } else {
-        let c = args[0];
-        if (client.commands.has(c)) {
-            c = client.commands.get(c);
-            embed.setTitle(c.help.name);
-            embed.setColor(0xFFDB1D);
-            embed.addField(c.help.usage, "aliases: " + c.conf.aliases.toString());
-            embed.addField("Description", c.help.description);
-            message.channel.send(embed);
-        }
-    }
+    let description = "Go [here](https://chadthunderbot.weebly.com/help.html) for help.";
+    let embed = embedUtil.createMessage("Help", description, "smiling sunglasses", false);
+    message.channel.send(embed);
 }
 
 exports.conf = {
@@ -45,6 +25,6 @@ exports.conf = {
 
 exports.help = {
     name: "help",
-    description: "Returns what Chad can do.",
+    description: "Gives info on Chad's capabilities",
     usage: "help"
 };
