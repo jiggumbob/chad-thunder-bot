@@ -21,15 +21,9 @@ const Reddit = new snoowrap({
 
 /* Get JQuery stuff ready. Used for reddit url command*/
 var jsdom = require("jsdom");
-const {
-    JSDOM
-} = jsdom;
-const {
-    window
-} = new JSDOM();
-const {
-    document
-} = (new JSDOM('')).window;
+const {JSDOM} = jsdom;
+const {window} = new JSDOM();
+const {document} = (new JSDOM('')).window;
 global.document = document;
 var $ = jQuery = require('jquery')(window);
 
@@ -84,7 +78,6 @@ exports.processUrlCommand = async function processUrlCommand(url, context) {
         let urlJSON = url + ".json";
         await $.getJSON(urlJSON, async function(data) {
             // get post ID from the reddit link JSON and get the post object at that ID
-
             let id = data[0].data.children[0].data.id;
             post = await Reddit.getSubmission(id);
         });

@@ -46,5 +46,16 @@ const emojis = {
     "fearful face" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/fearful-face_1f628.png",
     "pensive" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/pensive-face_1f614.png",
     "smiling face" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/147/smiling-face-with-open-mouth-and-smiling-eyes_1f604.png",
-    "exclamation mark": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/double-exclamation-mark_203c.png"
+    "exclamation mark": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/double-exclamation-mark_203c.png",
+    "crossed out bell" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/bell-with-cancellation-stroke_1f515.png",
+    "musical note" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/musical-note_1f3b5.png",
+    "curved arrow" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/rightwards-arrow-with-hook_21aa.png",
+    "waving hand" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/waving-hand-sign_1f44b.png",
+    "pause button": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/144/twitter/154/double-vertical-bar_23f8.png",
+    "play pause": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/144/twitter/154/black-right-pointing-triangle-with-double-vertical-bar_23ef.png",
+    "repeat arrow": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/clockwise-rightwards-and-leftwards-open-circle-arrows_1f501.png",
+    "right arrow": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/black-rightwards-arrow_27a1.png",
+    "eject symbol" : "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/eject-symbol_23cf.png",
+    "books": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/154/books_1f4da.png" 
+    
 };
