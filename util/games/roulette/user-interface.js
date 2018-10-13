@@ -277,7 +277,7 @@ exports.helpMessage = async function helpMessage(context) {
         beforeSpinDescription += "`" + group.name + "`, ";
     }
     beforeSpinDescription += " or any number between 0-36.\n\nThe amount of money you get from each of these bets can be viewed at " + 
-      "`https://en.wikipedia.org/wiki/Roulette#Bet_odds_table`. Note, this is French roulette, there is no `00`.";
+      "<https://en.wikipedia.org/wiki/Roulette#Bet_odds_table>. Note, this is French roulette, there is no `00`.";
     
     let afterSpinDescription = "Use `" + process.env.PREFIX + "roulette view`.\n\n" +
                                "This shows you how much you earned/lost that round off of betting.";
