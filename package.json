@@ -1,7 +1,7 @@
 {
-  "name": "chad-thunderbot",
-  "version": "0.12.0",
-  "description": "A multi-purpose work in progress Discord bot.",
+  "name": "chad-thunder-bot",
+  "version": "0.12.1",
+  "description": "A powerful feature-filled Discord bot.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

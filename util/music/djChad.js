@@ -307,27 +307,44 @@ exports.removeFromQueue = async function removeFromQueue(context, args) {
         return;
     }
     // check to see if a number was provided
-    if (!args[0]) {
+    if (!args[1]) {
         let errorMessage = createErrorMessage("Please specify which position in the queue to remove.");
         context.channel.send(errorMessage);
         return;
     }
     
+    let queuePosition = args[1] - 1; // use args[1] - 1 because the displayed list starts at 1 while the array start at 0
     // check to see if the number is within the queue bounds
-    // use args[0] - 1 because the displayed list starts at 1 while the array start at 0
-    if (!server.queue[args[0] - 1]) {
+    if (!server.queue[queuePosition]) {
         let errorMessage = createErrorMessage("That isnt a valid option in the queue.");
         context.channel.send(errorMessage);
         return;
     }
     
-    let removedVideoURL = server.queue.splice(args[0] - 1, 1)[0]; // removes that song from the queue
+    let removedVideoURL = server.queue.splice(queuePosition, 1)[0]; // removes that song from the queue
   
     let description = "**Removed** `" + await getTitle(removedVideoURL) + "` from the queue.";
     let message = embedUtil.createMessage("Removed Video", description, "eject symbol", false);
     context.channel.send(message);
 }
 
+/**
+ * Handles user requests to clear the queue.
+ *
+ * @param  Message  context  The Discord command that initiated the bot response.
+ */
+exports.clearQueue = async function clearQueue(context) {
+    var server = servers[context.guild.id];
+    if (!server || !server.nowPlaying) {
+        let errorMessage = createErrorMessage("There is no queue!");
+        context.channel.send(errorMessage);
+        return;
+    }
+    server.queue = [];
+    let description = "**Cleared** the queue successfully.";
+    let message = embedUtil.createMessage("Cleared Queue", description, undefined, false);
+    context.channel.send(message);
+}
 /**
  * Returns a URL for a Youtube video based on the search term.
  *
