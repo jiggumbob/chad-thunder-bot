@@ -45,7 +45,7 @@ async function getTitle(url) {
 function streamConnection(connection, context) {
     var server = servers[context.guild.id];
   
-    server.dispatcher = connection.playStream(ytdl(server.queue[0], {filter: "audioonly"}));
+    server.dispatcher = connection.playStream(ytdl(server.queue[0], {filter: "audioonly"}, {quality: "lowest"}));
     
     // nowPlaying is now the next song in the queue
     server.nowPlaying = server.queue.shift();
