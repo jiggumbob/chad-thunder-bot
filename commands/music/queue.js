@@ -8,7 +8,16 @@
 var djChad = require("../../util/music/djChad.js");
 
 exports.run = async (client, message, args) => {
-    djChad.queue(message);
+    switch (args[0]) {
+        case "remove":
+            djChad.removeFromQueue(message, args);
+            break;
+        case "clear":
+            djChad.clearQueue(message);
+            break;
+        default:
+            djChad.queue(message);
+    }
 }
 
 exports.conf = {
