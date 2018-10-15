@@ -6,6 +6,7 @@
  */
 
 var djChad = require("../../util/music/djChad.js");
+const embedUtil = require("../../util/embed-message-tool.js");
 
 exports.run = async (client, message, args) => {
     switch (args[0]) {
@@ -15,8 +16,14 @@ exports.run = async (client, message, args) => {
         case "clear":
             djChad.clearQueue(message);
             break;
+        case "view":
+            djChad.queue(message, args);
+            break;
         default:
-            djChad.queue(message);
+            let error = embedUtil.createMessage("Error", "Please specify which queue subcommand " + 
+                                                  "you want to use!\n Use `" + process.env.PREFIX + "help` " +
+                                                  "for more info.", "crossed out bell", true);
+            message.channel.send(error); 
     }
 }
 

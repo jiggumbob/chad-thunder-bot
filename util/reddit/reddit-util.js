@@ -19,14 +19,6 @@ const Reddit = new snoowrap({
     refreshToken: process.env.REDDIT_REFRESH_TOKEN
 });
 
-/* Get JQuery stuff ready. Used for reddit url command*/
-var jsdom = require("jsdom");
-const {JSDOM} = jsdom;
-const {window} = new JSDOM();
-const {document} = (new JSDOM('')).window;
-global.document = document;
-var $ = jQuery = require('jquery')(window);
-
 /* Create a reddit saver that saves 100 post id's per subreddit and
 clear all subreddits after 30 minutes*/
 var redditSaver = new redditsaver.RedditSaver(Reddit, 100);
@@ -74,13 +66,10 @@ exports.processUrlCommand = async function processUrlCommand(url, context) {
     try {
         var botRetrieveMessage = await context.channel.send("Retrieving that post...");
         var post;
-
-        let urlJSON = url + ".json";
-        await $.getJSON(urlJSON, async function(data) {
-            // get post ID from the reddit link JSON and get the post object at that ID
-            let id = data[0].data.children[0].data.id;
-            post = await Reddit.getSubmission(id);
-        });
+      
+        let idSearch = new RegExp("/[a-zA-Z0-9]{6}/"); // match the id in the URL
+        let id = url.match(idSearch)[0].replace("/", "");
+        post = await Reddit.getSubmission(id);
 
         botRetrieveMessage.delete();
         printRedditPost(post, context);
@@ -147,10 +136,7 @@ async function getEmbedMessage(post, context) {
  * @return  RichEmbed  An embed object detailing the error that occurred
  */
 async function getEmbedError(errorMessage) {
-    return embedTool.createMessage("Reddit Error",
-                                    errorMessage,
-                                    "loud crying",
-                                    true);
+    return embedTool.createMessage("Reddit Error",errorMessage,"loud crying", true);
 }
 
 /**

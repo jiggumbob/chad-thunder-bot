@@ -9,7 +9,8 @@ const rp = require("request-promise");
 const cheerio = require("cheerio");
 const embedUtil = require("./embed-message-tool.js");
 
-const linkBase = "https://www.google.com/search?source=&q=";
+const linkBaseSafe = "https://www.google.com/search?safe=active&q=";
+const linkBase = "https://www.google.com/search?q=";
 
 const numOfResultsToDisplay = 6; // TOTAL number of links to display
 /**
@@ -27,8 +28,9 @@ exports.search = async function search(context, args) {
         context.channel.send(createSearchError("No search provided!"));
         return;
     }
-  
-    let links = await getResults(linkBase + term);
+    
+    let searchURL = (context.channel.nsfw ? linkBase : linkBaseSafe) + term;
+    let links = await getResults(searchURL);
     
     // no results found
     if (links.length == 0) {
@@ -43,6 +45,7 @@ exports.search = async function search(context, args) {
     for (let i = 1; i < length; i ++) {
         description += "**" + i + ".** " + links[i] + "\n";
     }
+    description += "\n**SafeSearch " + (context.channel.nsfw ? "off" : "on") + "**";
     let message = embedUtil.createMessage("Some Other Results You May Want", description, "books", false);
     context.channel.send(message);
 }

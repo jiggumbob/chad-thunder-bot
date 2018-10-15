@@ -45,7 +45,7 @@ async function getTitle(url) {
 function streamConnection(connection, context) {
     var server = servers[context.guild.id];
   
-    server.dispatcher = connection.playStream(ytdl(server.queue[0], {filter: "audioonly"}));
+    server.dispatcher = connection.playStream(ytdl(server.queue[0], {filter: "audioonly"}, {quality: "lowest"}));
     
     // nowPlaying is now the next song in the queue
     server.nowPlaying = server.queue.shift();
@@ -250,21 +250,44 @@ exports.leave = async function stop(context) {
  * Handles user requests to view the queue.
  *
  * @param  Message  context  The Discord command that initiated the bot response.
+ * @param  Array    args     Arguments the user provided in their command.
  */
-exports.queue = async function queue(context) {
+exports.queue = async function queue(context, args) {
     var server = servers[context.guild.id];
     if (!server || !server.nowPlaying) {
         let errorMessage = createErrorMessage("There is nothing in the queue.");
         context.channel.send(errorMessage);
         return;
     }
+  
+    const songsPerPage = 6; // only display first songsPerPage songs per page
+    let pageNumber = args[1];
+  
+    // nothing provided, assume they want the first page
+    if (!args[1]) {
+        pageNumber = 1;
+    }
     
-    let nowPlaying = "**Now Playing **[" + await getTitle(server.nowPlaying) + 
-                     "](" + server.nowPlaying + ") | `" + await getDuration(server.nowPlaying) + "`\n";
+    let startPageIndex = (pageNumber - 1) * songsPerPage;
+    let endPageIndex = startPageIndex + songsPerPage - 1;
+    // make sure the page stops before the end of the queue
+    endPageIndex = (endPageIndex > server.queue.length - 1) ? server.queue.length - 1 : endPageIndex;
+    let totalPages = Math.ceil(server.queue.length / songsPerPage);
+  
+    // make sure it's an actual page existing
+    if (!server.queue[startPageIndex]) {
+        let errorMessage = createErrorMessage("That is not a real page in the queue.");
+        context.channel.send(errorMessage);
+        return;
+    }
+    
+    let nowPlaying = undefined;
+    if (pageNumber == 1) {
+        nowPlaying = "**Now Playing **[" + await getTitle(server.nowPlaying) + 
+                         "](" + server.nowPlaying + ") | `" + await getDuration(server.nowPlaying) + "`\n";
+    }
     let queueSongs = "";
-    const numToDisplay = 5; // only display first numToDisplay songs
-    let length = (server.queue.length > numToDisplay) ? numToDisplay : server.queue.length;
-    for (let i = 0; i < length; i++) { 
+    for (let i = startPageIndex; i < endPageIndex + 1; i++) {
         let songTitle = await getTitle(server.queue[i]); 
         queueSongs += "**" + (i+1) + ".** [" + songTitle + "](" + server.queue[i] + 
         ") | `" + await getDuration(server.queue[i]) + "`\n";
@@ -272,7 +295,8 @@ exports.queue = async function queue(context) {
     let message = embedUtil.createMessage("Songs", nowPlaying, "musical note", false);
     if (queueSongs.length > 0) {
         // can't add empty fields, so do it only if there are queued songs
-        message.addField("Queue", queueSongs);
+        message.addField("Queue", queueSongs + "\n");
+        message.addField("Page Number", "**" + pageNumber + "/" + totalPages + "**");
     }
     context.channel.send(message);
 }
