@@ -67,7 +67,6 @@ async function getResults(url) {
     };
     let html = await rp(options);
     const $ = cheerio.load(html);
-    // console.log(html);
     let links = [];
   
     // get the knowledge result video
