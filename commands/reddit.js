@@ -13,6 +13,10 @@ const redditutil = require("../util/reddit/reddit-util.js");
 const embedTool = require("../util/embed-message-tool.js");
 
 exports.run = async (client, message, args) => {
+    if(!args[0]) {
+        message.channel.send(embedTool.createMessage("Reddit Error", "Please specify a Subreddit", "confused face", true));
+        return;
+    }
     if(args[0].includes("https://")) {
         redditutil.processUrlCommand(args[0], message);
     } else {

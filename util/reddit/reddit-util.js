@@ -159,16 +159,26 @@ async function printRedditPost(post, context) {
 
     let embed = await getEmbedMessage(post, context);
   
-    if (await post.selftext.length == 0) {                     // url
-        if (await post.thumbnail != "default") {
+    // url vs. text post
+    if (await post.selftext.length == 0) {
+        let isVideoPost = (await post.url).includes("youtu.be") || (await post.url).includes("v.redd") || (await post.url).includes("youtube");
+        let isGifPost = (await post.url).includes(".gif") || await post.url.includes("gfycat") || await post.is_gif;
+        let isLinkPost = (await post.thumbnail) == "default";
+        
+        if (!isVideoPost && !isLinkPost && !isGifPost) {
             context.channel.send(embed.setImage(await post.url));
-        } else {
-            // url cannot parse normally to an image, so use Discord's message embedding instead and edit
+        } else if (isLinkPost) {
+            // url cannot parse normally to an image, but can use Discord's message embedding instead
             let message = await context.channel.send(await post.url);
             embed.setImage(message.embeds[0].thumbnail.url);
             message.edit(embed);
+        } else {
+            // v.reddit links are atrocious
+            let extraURL = (await post.url).includes("v.redd") ? "/DASH_600_K" : "";
+            context.channel.send(embed);
+            context.channel.send(await post.url + extraURL);
         }
-    } else {                                                   // text post
+    } else {
         for (let piece of await getLongPostContent(post)) {
             embed.setDescription(piece);
             context.channel.send(embed);
