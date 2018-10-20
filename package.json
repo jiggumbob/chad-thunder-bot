@@ -1,6 +1,6 @@
 {
   "name": "chad-thunder-bot",
-  "version": "0.14.3",
+  "version": "0.14.4",
   "description": "A powerful feature-filled Discord bot.",
   "main": "index.js",
   "scripts": {
