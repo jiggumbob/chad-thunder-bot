@@ -275,7 +275,7 @@ exports.queue = async function queue(context, args) {
     let totalPages = Math.ceil(server.queue.length / songsPerPage);
   
     // make sure it's an actual page existing
-    if (!server.queue[startPageIndex]) {
+    if (!server.queue[startPageIndex] && !server.nowPlaying) {
         let errorMessage = createErrorMessage("That is not a real page in the queue.");
         context.channel.send(errorMessage);
         return;

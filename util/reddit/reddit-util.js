@@ -114,14 +114,12 @@ async function getLongPostContent(post) {
  * @return  RichEmbed  An embed object representing the Reddit post
 */
 async function getEmbedMessage(post, context) {
-    let embed = embedTool.createMessage(await post.title.slice(0, 256),
-                                    undefined,
-                                    undefined,
-                                    false);
+    let embed = embedTool.createMessage(await post.title.slice(0, 256),undefined, undefined, false);
     // use the permalink to make sure that even for image posts you get the reddit link, not the image  link
     embed.setAuthor("u/" + await post.author.name, undefined, "https://www.reddit.com" + await post.permalink);
     embed.setFooter(await post.subreddit_name_prefixed + " → Score: " + 
                     await post.score + " → Requested by " + context.channel.guild.member(context.author).nickname);
+    embed.setURL(await post.url);
     return embed;
 }
 
@@ -160,13 +158,17 @@ async function printRedditPost(post, context) {
     context.delete();
 
     let embed = await getEmbedMessage(post, context);
-
-    if (await post.selftext.length == 0) {
-        // print URL
-        context.channel.send(embed);
-        context.channel.send(await post.url);
-    } else {
-        // print text post
+  
+    if (await post.selftext.length == 0) {                     // url
+        if (await post.thumbnail != "default") {
+            context.channel.send(embed.setImage(await post.url));
+        } else {
+            // url cannot parse normally to an image, so use Discord's message embedding instead and edit
+            let message = await context.channel.send(await post.url);
+            embed.setImage(message.embeds[0].thumbnail.url);
+            message.edit(embed);
+        }
+    } else {                                                   // text post
         for (let piece of await getLongPostContent(post)) {
             embed.setDescription(piece);
             context.channel.send(embed);

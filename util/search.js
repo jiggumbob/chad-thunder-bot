@@ -66,15 +66,21 @@ async function getResults(url) {
         }
     };
     let html = await rp(options);
-    const $ = cheerio.load(html); 
-  
+    const $ = cheerio.load(html);
     let links = [];
+  
+    // get the knowledge result video
+    let potentialVideos = $("#search").find(".sdeXpf");
+    if (potentialVideos.length > 0) {
+        links.push(potentialVideos[0].children[3].children[0].data); // url of the video
+    }
+  
     let results = $("#search").find(".g");
     // iterate through all the search results
     results.each(function(index, element) {
         try {
-            let info = element.children[0]; // information element of g
-            let linkInfo = info.children[0]; // link element 
+            let info = element.children[0]; // information element of search result
+            let linkInfo = info.children[0]; // potential link element of information
 
             // get only link results, not others
             if (linkInfo.name == "a" && linkInfo.attribs.href.includes("http")) {
