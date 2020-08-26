@@ -1,7 +1,4 @@
-# Chad Thunder Bot
-Chad Thunder Bot is **currently in development** and not available to add to your server just yet.
-
-[Need help with commands?](https://chadthunderbot.weebly.com/help.html)
+No longer under development.
 
 ## Features
 **Web Search** 
